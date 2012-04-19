@@ -1,5 +1,9 @@
 package capps.gp.gptrees; 
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.junit.*; 
 import static org.junit.Assert.*; 
 
@@ -15,11 +19,30 @@ public class GPTreeTest {
 		funcs = new ArrayList<Class<? extends GPFunction>>(); 
 
 		terms.add(ERCNode.class);
+
+		funcs.add(PlusFunc.class); 
+		funcs.add(MultFunc.class); 
+//		funcs.add(DivideFunc.class); 
+		funcs.add(MinusFunc.class); 
 	}
 
     @Test
     public void testDotFile() {
-		GPTree testTree = new GPTree(4, GPTree.METHOD.FULL, funcs, terms); 
+		GPTree testTree = new GPTree(3, GPTree.METHOD.FULL, funcs, terms); 
+		String dotStr = testTree.toDot("Test tree"); 
+		System.out.println(dotStr); 
+		BufferedWriter fileOut; 
+		try {
+			fileOut = new BufferedWriter(new FileWriter("testdot.dot")); 
+			fileOut.write(dotStr); 
+			fileOut.close(); 
+		}
+		catch (IOException e) {
+			System.out.println("Exception writing dot file\n"); 
+		}
+
+		System.out.println("Result=" + testTree.getResult(null)); 
+
     }
 
   

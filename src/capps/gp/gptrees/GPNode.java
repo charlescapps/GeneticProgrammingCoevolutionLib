@@ -3,7 +3,7 @@ package capps.gp.gptrees;
 import java.util.List; 
 
 public abstract class GPNode {
-    private List<GPNode> subtrees;
+    protected List<GPNode> subtrees;
 
     public abstract int interpretForResult(GameState state); 
     public abstract int numSubtrees(); 

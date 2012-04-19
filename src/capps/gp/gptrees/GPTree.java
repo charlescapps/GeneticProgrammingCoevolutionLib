@@ -86,25 +86,28 @@ public class GPTree {
 
     public String toDot(String graphName) {
 		StringBuilder dotStr = new StringBuilder(); 
-		dotStr.append("graph " + graphName + "{" + "\n");
+		dotStr.append("digraph \"" + graphName + "\" {" + "\n");
 		 
-		dotRecurse(root, dotStr, 0); 
+		dotRecurse(root, dotStr, "0"); 
 
 		dotStr.append("}"); 
         return dotStr.toString();  
     }
 
-	private void dotRecurse(GPNode node, StringBuilder dotStr, int nodeNo) {
-		String id = "\"" + Integer.toString(nodeNo) + "\""; 
+	private void dotRecurse(GPNode node, StringBuilder dotStr, String nodeStr) {
+		String id = "\"" + nodeStr + "\""; 
 		String lab = "\"" + node.label() + "\""; 
 		dotStr.append(id + " [label=" + lab + "];\n"); 
 
 		if (node.subtrees() == null)
 			return; 
 
+		int i = 0; 
+
 		for (GPNode n: node.subtrees()) {
-			dotStr.append(id + " -> \"" + (++nodeNo) + "\"\n");
-			dotRecurse(n, dotStr, nodeNo); 
+			String childNodeStr = nodeStr + i++; 
+			dotStr.append(id + " -> \"" + childNodeStr + "\";\n");
+			dotRecurse(n, dotStr, childNodeStr); 
 		}
 	}
 
