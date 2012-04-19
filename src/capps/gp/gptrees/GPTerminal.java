@@ -2,7 +2,7 @@ package capps.gp.gptrees;
 
 import java.util.List; 
 
-/*
+/**
  * A GP Node that has no children. Used for GPTree to know how to randomly
  * generate trees of a fixed depth.
  */

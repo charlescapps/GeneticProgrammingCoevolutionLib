@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.ArrayList; 
 
 /**
- * Class storing a GPTree. The constructor will create a random GPTree 
- * (Currently a full tree.) It takes the depth, the method (FULL or GROW), and
+ * Class storing a GPTree and the types of nodes it can have. 
+ * The constructor will create a random GPTree (Currently a full tree.) 
+ * It takes the depth, the method (FULL or GROW), 
  * a list of GPFunction classes and a list of GPTerminal classes. 
  *
  * It assumes a default constructor is defined for each node class type
  * passed in. 
  *
+ * Implemented generic function to produce a .dot file for graphviz. Highly
+ * useful, because personally I wouldn't have any confidence in my code if I
+ * couldn't visualize the trees. 
  **/
 public class GPTree {
 
@@ -111,5 +115,17 @@ public class GPTree {
 		}
 	}
 
+	public void crossover(GPTree mate) {
+		
+	}
+
+	private ParentChild getRandomSubtree() {
+
+	}
+
+	private class ParentChild {
+		public GPNode parent; 
+		public int childIndex; 
+	}
 
 }

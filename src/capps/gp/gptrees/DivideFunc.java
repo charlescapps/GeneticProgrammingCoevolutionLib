@@ -15,8 +15,7 @@ public class DivideFunc extends GPFunction {
 		assert(subtrees.size() == 2); 
 		int result0 = subtrees.get(0).interpretForResult(state); 
 		int result1 = subtrees.get(1).interpretForResult(state);
-		return (result1 == 0 ? 1 : result0 / result1); 
-			
+		return (result1 == 0 ? result0 : Math.round((float)result0 / (float)result1)); 
 
 	}
 
