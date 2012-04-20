@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.List; 
 import java.util.ArrayList; 
 
+import capps.misc.MutableInt; 
+
 /**
  * Class storing a GPTree and the types of nodes it can have. 
  * The constructor will create a random GPTree (Currently a full tree.) 
@@ -41,9 +43,95 @@ public class GPTree {
 
     }
 
+	public GPNode getRoot() {
+		return root; 
+	}
+
+	public void setRoot(GPNode root) {
+		this.root = root; 
+	}
+
     public int getResult(GameState state) {
         return root.interpretForResult(state); 
     }
+
+	public int totalNodes() {
+		return totalNodesRecurse(root); 
+	}
+
+	private int totalNodesRecurse(GPNode n) {
+		if (n.numSubtrees() == 0) {
+			return 1; 
+		}
+
+		int sum = 0; 
+
+		for (GPNode c: n.getSubtrees()) {
+			sum += totalNodesRecurse(c); 
+		}
+		return sum + 1; 
+	}
+
+	public int numTermNodes() {
+		return numTermNodesRecurse(root); 
+	}
+
+	private int numTermNodesRecurse(GPNode n) {
+		if (n.numSubtrees() == 0) {
+			return 1; 
+		}
+
+		int sum = 0; 
+
+		for (GPNode c: n.getSubtrees()) {
+			sum += numTermNodesRecurse(c); 
+		}
+		return sum; 
+
+	}
+
+	public int numFuncNodes() {
+		return numFuncNodesRecurse(root); 
+	}
+
+	private int numFuncNodesRecurse(GPNode n) {
+		if (n.numSubtrees() == 0) { //Terminal nodes have 0 subtrees
+			return 0; 
+		}
+
+		int sum = 0; 
+
+		for (GPNode c: n.getSubtrees()) {
+			sum += numFuncNodesRecurse(c); 
+		}
+		return sum + 1; 
+	}
+
+	public ParentChild getRandomSubtree() {
+		int numNodes = totalNodes(); 
+		int randomChoice = ranGen.nextInt(numNodes) + 1; 
+		MutableInt nodeNum = new MutableInt(0); 
+		System.out.println("Random subtree choice = " + randomChoice); 
+
+		if (randomChoice == 1) 
+			return new ParentChild(null, -1); 
+
+		return getRandomRecurse(root, nodeNum, randomChoice); 
+	}
+
+	private ParentChild getRandomRecurse(GPNode n, MutableInt nodeNum, int choice) {
+		nodeNum.inc(); 	
+		for (int i = 0; i < n.numSubtrees(); i++) {
+			if (nodeNum.toInt() + 1 == choice) {
+				return new ParentChild(n, i); 
+			}
+			ParentChild tmp = getRandomRecurse(n.getSubtrees().get(i), nodeNum, choice); 
+			if (tmp != null) 
+				return tmp; 
+		}
+
+		return null; 
+	}
 
     /**
      * Only implemented FULL grow technique so far. 
@@ -103,27 +191,31 @@ public class GPTree {
 		String lab = "\"" + node.label() + "\""; 
 		dotStr.append(id + " [label=" + lab + "];\n"); 
 
-		if (node.subtrees() == null)
+		if (node.getSubtrees() == null)
 			return; 
 
 		int i = 0; 
 
-		for (GPNode n: node.subtrees()) {
+		for (GPNode n: node.getSubtrees()) {
 			String childNodeStr = nodeStr + i++; 
 			dotStr.append(id + " -> \"" + childNodeStr + "\";\n");
 			dotRecurse(n, dotStr, childNodeStr); 
 		}
 	}
 
-	public void crossover(GPTree mate) {
-		
-	}
+	/**
+	 * You know, we don't have pass by reference in Java, so we need to get
+	 * the parent node and the child we want to replace. 
+	 *
+	 * parent == null IFF the selected node is the root, because the root of a
+	 * tree is the unique node without a parent. childIndex is undefined in this
+	 * case and shouldn't be used. 
+	 */
+	public static class ParentChild {
+		public ParentChild(GPNode p, int index) {
+			this.parent = p; this.childIndex = index; 
+		}
 
-	private ParentChild getRandomSubtree() {
-
-	}
-
-	private class ParentChild {
 		public GPNode parent; 
 		public int childIndex; 
 	}

@@ -10,6 +10,7 @@ public abstract class GPTerminal extends GPNode {
 
     public abstract int interpretForResult(GameState state); 
 
+	@Override
     public int numSubtrees() { 
         return 0; 
     }
@@ -18,7 +19,7 @@ public abstract class GPTerminal extends GPNode {
         return;
     }
 
-    public List<GPNode> subtrees() {
+    public List<GPNode> getSubtrees() {
         return null;
     }
 
