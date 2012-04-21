@@ -8,7 +8,7 @@ import java.util.List;
  */
 public abstract class GPTerminal extends GPNode {
 
-    public abstract int interpretForResult(GameState state); 
+    public abstract double interpretForResult(GameState state); 
 
 	@Override
     public int numSubtrees() { 

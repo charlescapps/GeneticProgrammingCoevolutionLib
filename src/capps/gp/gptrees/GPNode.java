@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class GPNode {
     protected List<GPNode> subtrees;
 
-    public abstract int interpretForResult(GameState state); 
+    public abstract double interpretForResult(GameState state); 
     public abstract int numSubtrees(); 
 
     public void attachSubtrees(List<GPNode> subtrees) {

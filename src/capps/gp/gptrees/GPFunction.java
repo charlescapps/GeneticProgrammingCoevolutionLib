@@ -11,7 +11,7 @@ package capps.gp.gptrees;
 public abstract class GPFunction extends GPNode {
 
 	@Override
-    public abstract int interpretForResult(GameState state); 
+    public abstract double interpretForResult(GameState state); 
 	@Override
     public abstract int numSubtrees(); 
 	@Override

@@ -11,7 +11,7 @@ public class MinusFunc extends GPFunction {
 	}
 
 	@Override
-	public int interpretForResult(GameState state) {
+	public double interpretForResult(GameState state) {
 		assert(subtrees.size() == 2); 
 		return subtrees.get(0).interpretForResult(state) - 
 			subtrees.get(1).interpretForResult(state); 

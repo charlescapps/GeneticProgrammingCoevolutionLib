@@ -51,7 +51,7 @@ public class GPTree {
 		this.root = root; 
 	}
 
-    public int getResult(GameState state) {
+    public double getResult(GameState state) {
         return root.interpretForResult(state); 
     }
 

@@ -1,15 +1,15 @@
 package capps.gp.gptrees; 
 
 public class ERCNode extends GPTerminal{
-    private int value; 
+    private double value; 
 
 	public ERCNode() {
-		float r = (float) Math.random()*64.0f;
-        value = Math.round(r - 32.0f); //Value from -32 to 31
+		double r = Math.random()*128.0;
+        value = Math.round(r - 64.0); //Value from [-32.0 , 32.0)
     }
 
 	@Override
-    public int interpretForResult(GameState state) {
+    public double interpretForResult(GameState state) {
         return value; 
     }
 

@@ -1,16 +1,41 @@
 package capps.gp.gpcreatures; 
 
+import capps.gp.gpexceptions.FitnessNotComputed;
+import capps.gp.gpexceptions.InvalidFitnessException;
+
 import capps.gp.gptrees.GPTree; 
 import capps.gp.gptrees.GPNode; 
 
 public abstract class GPCreature {
 	protected GPTree myGpTree; 
+	protected boolean p_isFitnessValid; 
+	protected int fitness; 
 
 	public abstract void mutate(); 
 	public abstract void crossover(GPCreature mate); //modifies both creatures
 
 	public GPTree getTree() {
 		return myGpTree; 
+	}
+
+	public boolean isFitnessValid() {
+		return p_isFitnessValid; 
+	}
+
+	public int getFitness() throws InvalidFitnessException {
+		if (!p_isFitnessValid) 
+			throw new InvalidFitnessException(); 
+
+		return fitness; 
+	}
+
+	public void setFitness(int fitness) {
+		this.fitness = fitness; 
+		this.p_isFitnessValid = true; 
+	}
+
+	public void invalidateFitness() {
+		this.p_isFitnessValid = false; 
 	}
 
 	/**

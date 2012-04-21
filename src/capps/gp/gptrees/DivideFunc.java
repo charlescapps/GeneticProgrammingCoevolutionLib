@@ -11,11 +11,11 @@ public class DivideFunc extends GPFunction {
 	}
 
 	@Override
-	public int interpretForResult(GameState state) {
+	public double interpretForResult(GameState state) {
 		assert(subtrees.size() == 2); 
-		int result0 = subtrees.get(0).interpretForResult(state); 
-		int result1 = subtrees.get(1).interpretForResult(state);
-		return (result1 == 0 ? result0 : Math.round((float)result0 / (float)result1)); 
+		double result0 = subtrees.get(0).interpretForResult(state); 
+		double result1 = subtrees.get(1).interpretForResult(state);
+		return (result1 == 0. ? result0 : result0/result1); 
 
 	}
 
