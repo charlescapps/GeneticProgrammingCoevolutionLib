@@ -85,6 +85,19 @@ public class GPTreeTest {
 		}
 	}
 
+	@Test
+	public void testCloning() throws IOException {
+		GenericCreature c1 = new GenericCreature(3, funcs, terms); 
+		GenericCreature cloneC1 = (GenericCreature)c1.clone(); 
+		
+		FileWriter f1 = new FileWriter("original.dot"); 
+		f1.write(c1.getTree().toDot("Original tree"));
+		f1.close(); 
+		FileWriter f2 = new FileWriter("clone.dot"); 
+		f2.write(cloneC1.getTree().toDot("Clone tree"));
+		f2.close(); 
+		
+	}
   
 
 }

@@ -4,12 +4,16 @@ import java.util.List;
 
 import capps.gp.gptrees.*; 
 
-public class GenericCreature extends GPCreature{
+public class GenericCreature extends GPCreature {
 
 	public GenericCreature(int maxDepth, 
 			List<Class<? extends GPFunction>> funcs, 
 			List<Class<? extends GPTerminal>> terms) {
 		this.myGpTree = new GPTree(maxDepth, GPTree.METHOD.FULL, funcs, terms); 
+	}
+
+	public GenericCreature() { //Uninitialized creature
+
 	}
 
 	@Override
@@ -22,5 +26,12 @@ public class GenericCreature extends GPCreature{
 		this.genericCrossover(mate); 
 	}
 
+	@Override
+	public Object clone() {
+		GenericCreature cloneC = new GenericCreature(); 
+		cloneC.myGpTree = (GPTree)this.myGpTree.clone(); 
+		
+		return cloneC; 
+	}
 
 }

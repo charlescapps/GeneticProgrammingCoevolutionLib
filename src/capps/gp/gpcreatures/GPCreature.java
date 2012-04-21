@@ -1,18 +1,32 @@
 package capps.gp.gpcreatures; 
 
-import capps.gp.gpexceptions.FitnessNotComputed;
 import capps.gp.gpexceptions.InvalidFitnessException;
 
 import capps.gp.gptrees.GPTree; 
 import capps.gp.gptrees.GPNode; 
 
-public abstract class GPCreature {
+/** Class representing a "creature" in a population of GP algorithms. 
+ * This is distinct from GPTree for a number of reasons. For one, it holds
+ * additional information such as fitness. Might need to hold domain-specific
+ * information as well. 
+ *
+ * Idea here is to implement as much as we can in the root of the hierarchy.
+ * So genericCrossover is implemented here. This just uniformly chooses a
+ * random subtree from 2 GPCreatures and swaps them. genericGetOffspring is also
+ * implemented here. It does the same thing, but without modifying the original
+ * parents returns the first parent after it is modified by crossover.
+ */
+
+public abstract class GPCreature implements Cloneable{
 	protected GPTree myGpTree; 
 	protected boolean p_isFitnessValid; 
 	protected int fitness; 
 
 	public abstract void mutate(); 
 	public abstract void crossover(GPCreature mate); //modifies both creatures
+
+	/**without modifying the parents, produce offspring in some manner*/
+	public abstract GPCreature getOffspring(GPCreature mate); 
 
 	public GPTree getTree() {
 		return myGpTree; 
@@ -80,4 +94,15 @@ public abstract class GPCreature {
 		pc2.parent.getSubtrees().set(pc2.childIndex,
 				tmp); 
 	}
+
+	/**Default implementation of producing offspring. 
+	 * Make clones of parents, then return result of crossover*/
+	public GPCreature genericGetOffspring(GPCreature mate) {
+		GPCreature clone1 = (GPCreature)this.clone();
+		GPCreature clone2 = (GPCreature)mate.clone();
+		clone1.genericCrossover(clone2); 
+		return clone1;
+	}
+
+	public abstract Object clone(); 
 }

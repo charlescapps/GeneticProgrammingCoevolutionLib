@@ -12,7 +12,7 @@ import java.util.List;
  *
  */
 
-public abstract class GPNode {
+public abstract class GPNode implements Cloneable {
     protected List<GPNode> subtrees;
 
     public abstract double interpretForResult(GameState state); 
@@ -30,6 +30,9 @@ public abstract class GPNode {
 		assert (subtrees != null && n >= 0 && n < subtrees.size()); 
 		return subtrees.get(n); 
 	}
+
+	@Override
+	public abstract Object clone(); 
 
     public abstract String label();
 }

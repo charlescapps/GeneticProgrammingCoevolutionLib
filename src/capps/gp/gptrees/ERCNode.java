@@ -1,6 +1,6 @@
 package capps.gp.gptrees; 
 
-public class ERCNode extends GPTerminal{
+public class ERCNode extends GPTerminal implements Cloneable{
     private double value; 
 
 	public ERCNode() {
@@ -17,5 +17,12 @@ public class ERCNode extends GPTerminal{
     public String label() {
         return "ERC=" + value; 
     }
+
+	@Override
+	public Object clone() {
+		ERCNode cloneNode = new ERCNode(); 
+		cloneNode.value = this.value; 
+		return cloneNode; 
+	}
 
 }

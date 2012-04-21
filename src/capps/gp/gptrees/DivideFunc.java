@@ -1,6 +1,6 @@
 package capps.gp.gptrees; 
 
-public class DivideFunc extends GPFunction {
+public class DivideFunc extends GPFunction implements Cloneable {
 	public DivideFunc() {
 
 	}
@@ -22,6 +22,11 @@ public class DivideFunc extends GPFunction {
 	@Override
 	public String label() {
 		return "/"; 
+	}
+
+	@Override
+	public Object clone() {
+		return new DivideFunc(); 
 	}
 
 }

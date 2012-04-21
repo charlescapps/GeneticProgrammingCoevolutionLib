@@ -1,6 +1,6 @@
 package capps.gp.gptrees; 
 
-public class MultFunc extends GPFunction {
+public class MultFunc extends GPFunction implements Cloneable{
 	public MultFunc() {
 
 	}
@@ -21,6 +21,11 @@ public class MultFunc extends GPFunction {
 	@Override
 	public String label() {
 		return "*"; 
+	}
+
+	@Override
+	public Object clone() {
+		return new MultFunc(); 
 	}
 
 }

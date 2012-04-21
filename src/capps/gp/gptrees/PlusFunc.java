@@ -1,6 +1,6 @@
 package capps.gp.gptrees; 
 
-public class PlusFunc extends GPFunction {
+public class PlusFunc extends GPFunction implements Cloneable{
 	public PlusFunc() {
 
 	}
@@ -21,6 +21,10 @@ public class PlusFunc extends GPFunction {
 	@Override
 	public String label() {
 		return "+"; 
+	}
+
+	public Object clone() {
+		return new PlusFunc(); 
 	}
 
 }

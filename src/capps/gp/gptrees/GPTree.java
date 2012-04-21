@@ -19,7 +19,7 @@ import capps.misc.MutableInt;
  * useful, because personally I wouldn't have any confidence in my code if I
  * couldn't visualize the trees. 
  **/
-public class GPTree {
+public class GPTree implements Cloneable {
 
     public static enum METHOD {GROW, FULL}; 
     private GPNode root; 
@@ -28,7 +28,6 @@ public class GPTree {
     private Random ranGen; 
     
     public GPTree() {
-        this.root = null; 
     }
 
     public GPTree(int maxDepth, METHOD method, 
@@ -220,4 +219,27 @@ public class GPTree {
 		public int childIndex; 
 	}
 
+	@Override
+	public Object clone() {
+		GPTree theClone = new GPTree(); 
+		theClone.funcs = this.funcs; 
+		theClone.terms = this.terms; 
+		theClone.root=cloneHelper(root); 
+		return theClone; 	
+	}
+
+	private GPNode cloneHelper(GPNode current) {
+		GPNode cloneNode = (GPNode)current.clone(); 
+		if (GPTerminal.class.isInstance(cloneNode.getClass()) 
+				|| current.getSubtrees()==null)
+			return cloneNode; 
+
+		List<GPNode> cloneSubtrees = new ArrayList<GPNode>(); 
+		for (GPNode n: current.getSubtrees()) {
+			cloneSubtrees.add(cloneHelper(n)); 
+		}
+		cloneNode.attachSubtrees(cloneSubtrees); 
+
+		return cloneNode; 
+	}
 }

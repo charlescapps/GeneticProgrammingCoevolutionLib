@@ -8,7 +8,7 @@ package capps.gp.gptrees;
  *
  **/
 
-public abstract class GPFunction extends GPNode {
+public abstract class GPFunction extends GPNode implements Cloneable{
 
 	@Override
     public abstract double interpretForResult(GameState state); 

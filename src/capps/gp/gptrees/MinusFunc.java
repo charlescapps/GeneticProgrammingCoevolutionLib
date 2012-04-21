@@ -1,6 +1,6 @@
 package capps.gp.gptrees; 
 
-public class MinusFunc extends GPFunction {
+public class MinusFunc extends GPFunction implements Cloneable{
 	public MinusFunc() {
 
 	}
@@ -21,6 +21,11 @@ public class MinusFunc extends GPFunction {
 	@Override
 	public String label() {
 		return "-"; 
+	}
+
+	@Override
+	public Object clone() {
+		return new MinusFunc(); 
 	}
 
 }
