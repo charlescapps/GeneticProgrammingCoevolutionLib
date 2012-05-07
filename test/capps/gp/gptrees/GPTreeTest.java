@@ -3,6 +3,8 @@ package capps.gp.gptrees;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 import org.junit.*; 
 import static org.junit.Assert.*; 
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.ArrayList; 
 
 import capps.gp.gpcreatures.GenericCreature;
+import capps.gp.gpglobal.GPConfig;
 
 public class GPTreeTest {
 	List<Class<? extends GPTerminal>> terms; 
@@ -26,6 +29,13 @@ public class GPTreeTest {
 		funcs.add(MultFunc.class); 
 		funcs.add(DivideFunc.class); 
 		funcs.add(MinusFunc.class); 
+		try{
+			GPConfig.loadConfig(new BufferedReader(
+					new FileReader("configs/nonspatial.gp"))); 
+		}
+		catch (Exception e) {
+			System.err.println("Exception creating GPTreeTest class."); 
+		}
 	}
 
     @Test
@@ -35,7 +45,7 @@ public class GPTreeTest {
 		System.out.println(dotStr); 
 		BufferedWriter fileOut; 
 		try {
-			fileOut = new BufferedWriter(new FileWriter("testdot.dot")); 
+			fileOut = new BufferedWriter(new FileWriter("dots/testdot.dot")); 
 			fileOut.write(dotStr); 
 			fileOut.close(); 
 		}
@@ -60,16 +70,16 @@ public class GPTreeTest {
 		FileWriter t2Crossed;
 		
 		try {	
-			t1File = new FileWriter("t1.dot"); 
-			t2File = new FileWriter("t2.dot"); 
+			t1File = new FileWriter("dots/t1.dot"); 
+			t2File = new FileWriter("dots/t2.dot"); 
 			
 			t1File.write(c1.getTree().toDot("T1")); 
 			t2File.write(c2.getTree().toDot("T2")); 
 			
 			c1.crossover(c2); 
 
-			t1Crossed = new FileWriter("t1cross.dot"); 
-			t2Crossed = new FileWriter("t2cross.dot"); 
+			t1Crossed = new FileWriter("dots/t1cross.dot"); 
+			t2Crossed = new FileWriter("dots/t2cross.dot"); 
 
 			t1Crossed.write(c1.getTree().toDot("T1 Crossed")); 
 			t2Crossed.write(c2.getTree().toDot("T2 Crossed")); 
@@ -90,10 +100,10 @@ public class GPTreeTest {
 		GenericCreature c1 = new GenericCreature(3, funcs, terms); 
 		GenericCreature cloneC1 = (GenericCreature)c1.clone(); 
 		
-		FileWriter f1 = new FileWriter("original.dot"); 
+		FileWriter f1 = new FileWriter("dots/original.dot"); 
 		f1.write(c1.getTree().toDot("Original tree"));
 		f1.close(); 
-		FileWriter f2 = new FileWriter("clone.dot"); 
+		FileWriter f2 = new FileWriter("dots/clone.dot"); 
 		f2.write(cloneC1.getTree().toDot("Clone tree"));
 		f2.close(); 
 		

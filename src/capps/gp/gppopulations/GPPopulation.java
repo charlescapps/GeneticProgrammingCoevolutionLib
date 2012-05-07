@@ -6,9 +6,17 @@ import capps.gp.gpcreatures.GPCreature;
 
 public interface GPPopulation {
 
-	public List<List<GPCreature>> getAllGenerations(); 
 	public List<GPCreature> getNewestGeneration(); 
+	public GPCreature getBestCreature(); 
 	public void computeFitnesses(); 
-	public void getNextGeneration(); 
+	public void evolveNextGeneration(); 
+
+	public long getSeedUsed(); 
+	public long getRunNum(); 
+	public int getPopSize();
+
+	public String getHeader(); 
+	public String getShortGenInfo(); 
+	public String getLongGenInfo(); 
 
 }

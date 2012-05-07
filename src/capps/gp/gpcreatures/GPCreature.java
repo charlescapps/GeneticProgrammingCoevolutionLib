@@ -15,12 +15,23 @@ import capps.gp.gptrees.GPNode;
  * random subtree from 2 GPCreatures and swaps them. genericGetOffspring is also
  * implemented here. It does the same thing, but without modifying the original
  * parents returns the first parent after it is modified by crossover.
+ *
+ * Not sure <b>where</b> fitness calculation should take place. In Population
+ * class? In creature class? Decided on the following paradigm: 
+ *
+ * --Pass a creature the data it needs to get its fitness. This could be a list
+ *  of opponents for a tournament, or whatever. 
+ *
+ *  	-For example, void setOpponents(List<GPCreature>)
+ *
+ * --Creature must implement function computeFitness()
+ * --Then the Population class can call getFitness()
  */
 
-public abstract class GPCreature implements Cloneable{
+public abstract class GPCreature implements Cloneable, Comparable<GPCreature>{
 	protected GPTree myGpTree; 
 	protected boolean p_isFitnessValid; 
-	protected int fitness; 
+	protected double fitness; 
 
 	public abstract void mutate(); 
 	public abstract void crossover(GPCreature mate); //modifies both creatures
@@ -36,17 +47,20 @@ public abstract class GPCreature implements Cloneable{
 		return p_isFitnessValid; 
 	}
 
-	public int getFitness() throws InvalidFitnessException {
+	public double getFitness() throws InvalidFitnessException {
 		if (!p_isFitnessValid) 
 			throw new InvalidFitnessException(); 
 
 		return fitness; 
 	}
 
-	public void setFitness(int fitness) {
-		this.fitness = fitness; 
-		this.p_isFitnessValid = true; 
+	@Override
+	public int compareTo(GPCreature c2) {
+		return (this.fitness > c2.fitness ? 1 : 
+				(this.fitness == c2.fitness ? 0 : -1)); 
 	}
+
+	public abstract void computeFitness();
 
 	public void invalidateFitness() {
 		this.p_isFitnessValid = false; 
@@ -104,5 +118,6 @@ public abstract class GPCreature implements Cloneable{
 		return clone1;
 	}
 
+	@Override
 	public abstract Object clone(); 
 }

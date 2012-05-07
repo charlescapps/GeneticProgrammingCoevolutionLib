@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.List; 
 import java.util.ArrayList; 
 
+import capps.gp.gpglobal.GPConfig;
+
 import capps.misc.MutableInt; 
 
 /**
@@ -28,20 +30,32 @@ public class GPTree implements Cloneable {
     private Random ranGen; 
     
     public GPTree() {
+		this.ranGen = GPConfig.getRandGen();
+    }
+
+	/**Store the types of allowed nodes, but don't grow a tree.*/
+    public GPTree(List<Class<? extends GPFunction>> funcs, 
+            List<Class<? extends GPTerminal>> terms) {
+
+		ranGen = GPConfig.DEFAULT_RANDOM;  
+		assert (ranGen != null) : "Random generator is null in GPTree."; 
+
+        this.funcs = funcs; 
+        this.terms = terms; 
     }
 
     public GPTree(int maxDepth, METHOD method, 
             List<Class<? extends GPFunction>> funcs, 
             List<Class<? extends GPTerminal>> terms) {
 
-        ranGen = new Random(System.currentTimeMillis()); 
+		ranGen = GPConfig.DEFAULT_RANDOM; 
+		assert (ranGen != null) : "Random generator is null in GPTree."; 
 
         this.funcs = funcs; 
         this.terms = terms; 
         this.root = recursiveGrow(maxDepth, method);    
-
     }
-
+    
 	public GPNode getRoot() {
 		return root; 
 	}
@@ -56,6 +70,25 @@ public class GPTree implements Cloneable {
 
 	public int totalNodes() {
 		return totalNodesRecurse(root); 
+	}
+
+	public int getHeight() {
+		return getHeightRecurse(root); 
+	}
+
+	private int getHeightRecurse(GPNode n) {
+		if (n==null)
+			return 0; 
+		if (n.numSubtrees()==0)
+			return 0; 
+
+		int max = 0; 
+
+		for (GPNode n2: n.getSubtrees()) {
+			max = Math.max(max, getHeightRecurse(n2)); 
+		}
+
+		return 1+max; 
 	}
 
 	private int totalNodesRecurse(GPNode n) {
@@ -86,7 +119,6 @@ public class GPTree implements Cloneable {
 			sum += numTermNodesRecurse(c); 
 		}
 		return sum; 
-
 	}
 
 	public int numFuncNodes() {
@@ -107,10 +139,11 @@ public class GPTree implements Cloneable {
 	}
 
 	public ParentChild getRandomSubtree() {
+		assert (ranGen != null) : "Random generator is null in GPTree."; 
 		int numNodes = totalNodes(); 
 		int randomChoice = ranGen.nextInt(numNodes) + 1; 
 		MutableInt nodeNum = new MutableInt(0); 
-		System.out.println("Random subtree choice = " + randomChoice); 
+		//System.out.println("Random subtree choice = " + randomChoice); 
 
 		if (randomChoice == 1) 
 			return new ParentChild(null, -1); 

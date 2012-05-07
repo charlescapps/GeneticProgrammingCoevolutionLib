@@ -1,11 +1,12 @@
 package capps.gp.gptrees; 
 
+import capps.gp.gpglobal.GPConfig;
+
 public class ERCNode extends GPTerminal implements Cloneable{
     private double value; 
 
 	public ERCNode() {
-		double r = Math.random()*128.0;
-        value = Math.round(r - 64.0); //Value from [-32.0 , 32.0)
+		value = GPConfig.DEFAULT_RANDOM.nextDouble()*4.0 - 2.0;
     }
 
 	@Override
@@ -15,7 +16,7 @@ public class ERCNode extends GPTerminal implements Cloneable{
 
 	@Override
     public String label() {
-        return "ERC=" + value; 
+        return "ERC=" + String.format("%1$,.3f",value); 
     }
 
 	@Override

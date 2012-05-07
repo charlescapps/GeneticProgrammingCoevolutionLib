@@ -16,7 +16,6 @@ public class DivideFunc extends GPFunction implements Cloneable {
 		double result0 = subtrees.get(0).interpretForResult(state); 
 		double result1 = subtrees.get(1).interpretForResult(state);
 		return (result1 == 0. ? result0 : result0/result1); 
-
 	}
 
 	@Override

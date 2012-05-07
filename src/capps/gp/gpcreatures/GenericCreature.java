@@ -13,8 +13,15 @@ public class GenericCreature extends GPCreature {
 	}
 
 	public GenericCreature() { //Uninitialized creature
-
+		//No way to instantiate a generic creature without a list of nodes
 	}
+
+	@Override
+	public void computeFitness() {
+		this.fitness = 0; 
+		System.err.println("GenericCreature's fitness function shouldn't be used."); 
+	}
+
 
 	@Override
 	public void mutate() {
@@ -24,6 +31,11 @@ public class GenericCreature extends GPCreature {
 	@Override
 	public void crossover(GPCreature mate) {
 		this.genericCrossover(mate); 
+	}
+
+	@Override
+	public GPCreature getOffspring(GPCreature c) {
+		return genericGetOffspring(c); 
 	}
 
 	@Override
