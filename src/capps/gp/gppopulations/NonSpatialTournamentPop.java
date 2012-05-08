@@ -159,7 +159,7 @@ public class NonSpatialTournamentPop extends GPPopulation {
 	}
 
 	@Override
-	public List<String> getShortGenInfo() throws InvalidFitnessException {
+	public List<String> getFinalGenInfo() throws InvalidFitnessException {
 		List<String> shortInfo = new ArrayList<String>(); 
 		String colHeader = String.format("%1$-12s", "ID") +
 						   String.format("%1$-12s", "FITNESS") +
@@ -186,6 +186,11 @@ public class NonSpatialTournamentPop extends GPPopulation {
 		return CREATURE_TYPE;
 	}
 
+	@Override
+	public List<String> getShortGenInfo() throws InvalidFitnessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 }

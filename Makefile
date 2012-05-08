@@ -6,17 +6,18 @@ src/capps/gp/gpcreatures/*.java \
 src/capps/gp/gptrees/*.java \
 src/capps/gp/gpexceptions/*.java \
 src/capps/gp/gpglobal/*.java \
+src/capps/gp/gpdrivers/*.java \
 impl/capps/gp/gpcreatures/*.java \
-impl/capps/gp/drivers/*.java
+#impl/capps/gp/gpdrivers/*.java
 
 TEST_SRC = test/capps/gp/gptrees/*.java
 
 general_evolver.jar: all
-	jar vcfe general_evolver.jar capps.gp.drivers.GeneralEvolver -C bin \
+	jar vcfe general_evolver.jar capps.gp.gpdrivers.GeneralEvolver -C bin \
 		capps
 
 evolve_funcs.jar: all
-	jar vcfe evolve_funcs.jar capps.gp.drivers.EvolveFuncApproxMain -C bin \
+	jar vcfe evolve_funcs.jar capps.gp.gpdrivers.EvolveFuncApproxMain -C bin \
 		capps
 
 all: $(ALL_SRC) $(TEST_SRC)

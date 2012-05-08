@@ -30,9 +30,15 @@ public class GPConfig {
 	private static final String _TOURNY_SIZE = "TOURNY_SIZE"; 
 	private static final String _GP_DEPTH = "GP_DEPTH"; 
 
+	private static final String _OUTPUT_FINAL_GEN = "OUTPUT_FINAL_GEN"; 
+	private static final String _OUTPUT_SHORT = "OUTPUT_SHORT"; 
+	private static final String _OUTPUT_LONG = "OUTPUT_LONG"; 
+
 	private static final String _OUTPUT_DIR = "OUTPUT_DIR"; 
 	private static final String _HEADER_FILE = "HEADER_FILE"; 
 	private static final String _SHORT_INFO_FILE = "SHORT_INFO_FILE"; 
+	private static final String _LONG_INFO_FILE = "LONG_INFO_FILE"; 
+	private static final String _FINAL_GEN_FILE = "FINAL_GEN_FILE"; 
 
 	private static final String _POP_CLASS = "POP_CLASS"; 
 	private static final String _CREATURE_CLASS = "CREATURE_CLASS"; 
@@ -47,9 +53,15 @@ public class GPConfig {
 	private static Integer gpDepth;
 	private static Random randGen; 
 
+	private static boolean outputFinalGen; 
+	private static boolean outputShort; 
+	private static boolean outputLong; 
+
 	private static String outputDir; 
 	private static String headerOutputFile; 
 	private static String shortInfoFile; 
+	private static String longInfoFile; 
+	private static String finalGenFile; 
 
 	private static Class<? extends GPPopulation> popClass; 
 	private static Class<? extends GPCreature> creatureClass; 
@@ -129,6 +141,26 @@ public class GPConfig {
 			else if (tokens[0].equals(_SHORT_INFO_FILE)) {
 				GPConfig.shortInfoFile = (tokens[1]); 
 			}
+			//CASE "LONG_INFO_FILE"
+			else if (tokens[0].equals(_LONG_INFO_FILE)) {
+				GPConfig.longInfoFile = (tokens[1]); 
+			}
+			//CASE "FINAL_GEN_FILE"
+			else if (tokens[0].equals(_FINAL_GEN_FILE)) {
+				GPConfig.finalGenFile = (tokens[1]); 
+			}
+			//CASE "OUTPUT_FINAL_GEN"
+			else if (tokens[0].equals(_OUTPUT_FINAL_GEN)) {
+				GPConfig.outputFinalGen = Boolean.parseBoolean(tokens[1]); 
+			}
+			//CASE "OUTPUT_SHORT"
+			else if (tokens[0].equals(_OUTPUT_SHORT)) {
+				GPConfig.outputShort = Boolean.parseBoolean(tokens[1]); 
+			}
+			//CASE "OUTPUT_LONG"
+			else if (tokens[0].equals(_OUTPUT_LONG)) {
+				GPConfig.outputLong = Boolean.parseBoolean(tokens[1]); 
+			}
 			//CASE "POP_CLASS"
 			else if (tokens[0].equals(_POP_CLASS)) {
 				GPConfig.popClass = (Class<? extends GPPopulation>)Class.forName(tokens[1]); 
@@ -192,6 +224,26 @@ public class GPConfig {
 
 	public static String getShortInfoFile() {
 		return shortInfoFile; 
+	}
+
+	public static String getLongInfoFile() {
+		return longInfoFile;
+	}
+
+	public static String getFinalGenFile() {
+		return finalGenFile;
+	}
+
+	public static boolean outputShort() {
+		return outputShort; 
+	}
+
+	public static boolean outputLong() {
+		return outputLong; 
+	}
+
+	public static boolean outputFinalGen() {
+		return outputFinalGen;
 	}
 
 	public static Class<? extends GPCreature> getCreatureType() {

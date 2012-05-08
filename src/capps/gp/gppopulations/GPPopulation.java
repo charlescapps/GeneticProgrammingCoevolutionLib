@@ -20,6 +20,39 @@ public abstract class GPPopulation {
 	public abstract int getPopSize();
 	public abstract Class<? extends GPCreature> getCreatureType(); 
 
+	public double getAvgFitnessCurrentGen() {
+		double sum=0.0; 
+		List<GPCreature> cs = getNewestGeneration(); 
+		try {
+			for (GPCreature c: cs)
+				sum+=c.getFitness(); 
+		} catch (InvalidFitnessException e) {
+			System.err.println("GPPopulation: getAvgFitnessCurrentGen: "
+					+ "Attempt to get invalid fitness."); 
+			return -1.0; 
+		}
+
+		return sum/(double)cs.size(); 
+	}
+
+	public double getStdDevFitnessCurrentGen() {
+		double avg = getAvgFitnessCurrentGen(); 
+		double sumSquares=0.0; 
+		List<GPCreature> cs = getNewestGeneration(); 
+		try {
+			for (GPCreature c: cs) {
+				double diff = avg - c.getFitness(); 
+				sumSquares+=diff*diff;
+			}
+		} catch (InvalidFitnessException e) {
+			System.err.println("GPPopulation: getStdDevFitnessCurrentGen: "
+					+ "Attempt to get invalid fitness."); 
+			return -1.0; 
+		}
+
+		return Math.sqrt(sumSquares/(double)cs.size()); 
+	}
+
 	public String getHeader() {
 		double bestFitness = 0.; 
 		try { bestFitness = getBestCreature().getFitness(); }
@@ -34,10 +67,13 @@ public abstract class GPPopulation {
 					"POPSIZE " + GPConfig.getPopSize() + "\n" + 
 					"NUM_GENS " + GPConfig.getNumGens() + "\n" +
 					"SEED " + GPConfig.getSeed() + "\n" +
-					"BEST_FITNESS " + String.format("%1$.3f",bestFitness) + "\n";
+					"BEST_FITNESS " + String.format("%1$.3f",bestFitness) + "\n" +
+					"AVG_FITNESS " + String.format("%1$.3f",getAvgFitnessCurrentGen()) + "\n" +
+					"STD_DEV_FITNESS " + String.format("%1$.3f",getStdDevFitnessCurrentGen()) + "\n";
 		return header;
 	}
 
+	public abstract List<String> getFinalGenInfo() throws InvalidFitnessException; 
 	public abstract List<String> getShortGenInfo() throws InvalidFitnessException; 
 	public abstract List<String> getLongGenInfo() throws InvalidFitnessException; 
 

@@ -185,7 +185,7 @@ public class SpatialTournamentPop extends GPPopulation {
 	}
 
 	@Override
-	public List<String> getShortGenInfo() throws InvalidFitnessException {
+	public List<String> getFinalGenInfo() throws InvalidFitnessException {
 		List<String> shortInfo = new ArrayList<String>(); 
 		String colHeader = String.format("%1$-12s", "ID") +
 						   String.format("%1$-12s", "FITNESS") +
@@ -200,6 +200,11 @@ public class SpatialTournamentPop extends GPPopulation {
 			}
 		}
 		return shortInfo;
+	}
+
+	@Override
+	public List<String> getShortGenInfo() throws InvalidFitnessException {
+		return null;
 	}
 
 	@Override
