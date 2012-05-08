@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import capps.gp.gpcreatures.FuncApproxCreature;
 import capps.gp.gpcreatures.SinSqCreature;
 import capps.gp.gpcreatures.GPCreature;
 
@@ -18,9 +17,9 @@ import capps.gp.gppopulations.NonSpatialTournamentPop;
  * tree to approximate sin^2(x) in the interval (-2*pi, 2*pi)
  */
 
-public class EvolveFuncApproxMain {
+public class GeneralEvolver {
 
-	public static String GP_USAGE = "java -jar evolve_funcs.jar " +
+	public static String GP_USAGE = "java -jar general_evolver.jar " +
 		"<config_filename>";
 	private static GPPopulation myPop; 
 	private static String configFile;
@@ -65,6 +64,7 @@ public class EvolveFuncApproxMain {
 		fw.write(dot); 
 		fw.close(); 
 
+
 		/**Output header file*/
 		System.out.println("Writing header to " + GPConfig.getHeaderFile()); 
 		fw = new FileWriter(GPConfig.getHeaderFile()); 
@@ -77,10 +77,5 @@ public class EvolveFuncApproxMain {
 		for (String row: myPop.getShortGenInfo())
 			fw.write(row + "\n"); 
 		fw.close(); 
-
-		assert(FuncApproxCreature.class.isInstance(best)); 
-		FuncApproxCreature bestFunc = (FuncApproxCreature)best; 
-		System.out.println(bestFunc.getFuncGraph()); 
-		System.out.println(bestFunc.getGraph()); 
 	}
 }

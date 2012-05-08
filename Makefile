@@ -11,6 +11,10 @@ impl/capps/gp/drivers/*.java
 
 TEST_SRC = test/capps/gp/gptrees/*.java
 
+general_evolver.jar: all
+	jar vcfe general_evolver.jar capps.gp.drivers.GeneralEvolver -C bin \
+		capps
+
 evolve_funcs.jar: all
 	jar vcfe evolve_funcs.jar capps.gp.drivers.EvolveFuncApproxMain -C bin \
 		capps

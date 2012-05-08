@@ -6,7 +6,7 @@ public class ERCNode extends GPTerminal implements Cloneable{
     private double value; 
 
 	public ERCNode() {
-		value = GPConfig.DEFAULT_RANDOM.nextDouble()*4.0 - 2.0;
+		value = GPConfig.getRandGen().nextDouble()*4.0 - 2.0;
     }
 
 	@Override

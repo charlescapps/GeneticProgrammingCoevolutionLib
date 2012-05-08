@@ -37,7 +37,7 @@ public class GPTree implements Cloneable {
     public GPTree(List<Class<? extends GPFunction>> funcs, 
             List<Class<? extends GPTerminal>> terms) {
 
-		ranGen = GPConfig.DEFAULT_RANDOM;  
+		ranGen = GPConfig.getRandGen();  
 		assert (ranGen != null) : "Random generator is null in GPTree."; 
 
         this.funcs = funcs; 
@@ -48,7 +48,7 @@ public class GPTree implements Cloneable {
             List<Class<? extends GPFunction>> funcs, 
             List<Class<? extends GPTerminal>> terms) {
 
-		ranGen = GPConfig.DEFAULT_RANDOM; 
+		ranGen = GPConfig.getRandGen(); 
 		assert (ranGen != null) : "Random generator is null in GPTree."; 
 
         this.funcs = funcs; 

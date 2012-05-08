@@ -32,6 +32,7 @@ public abstract class GPCreature implements Cloneable, Comparable<GPCreature>{
 	protected GPTree myGpTree; 
 	protected boolean p_isFitnessValid; 
 	protected double fitness; 
+	protected int id; //unique identifier for a creature in a population
 
 	public abstract void mutate(); 
 	public abstract void crossover(GPCreature mate); //modifies both creatures
@@ -43,6 +44,14 @@ public abstract class GPCreature implements Cloneable, Comparable<GPCreature>{
 		return myGpTree; 
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int newId) {
+		this.id = newId; 
+	}
+
 	public boolean isFitnessValid() {
 		return p_isFitnessValid; 
 	}
@@ -52,6 +61,13 @@ public abstract class GPCreature implements Cloneable, Comparable<GPCreature>{
 			throw new InvalidFitnessException(); 
 
 		return fitness; 
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!this.getClass().isInstance(o))
+			return false; 
+		return ((GPCreature)o).id == this.id; 
 	}
 
 	@Override

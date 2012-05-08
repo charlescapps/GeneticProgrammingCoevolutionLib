@@ -1,0 +1,7 @@
+RUNNUM 3073702670487081626
+POP_CLASS capps.gp.gppopulations.NonSpatialTournamentPop
+CREAT_CLASS capps.gp.gpcreatures.SinSqCreature
+POPSIZE 1000
+NUM_GENS 500
+SEED 1336498125227
+BEST_FITNESS 0.636

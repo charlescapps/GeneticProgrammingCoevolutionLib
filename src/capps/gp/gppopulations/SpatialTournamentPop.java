@@ -13,9 +13,10 @@ import capps.gp.gpexceptions.InvalidFitnessException;
 
 import capps.gp.gpglobal.GPConfig;
 
-public class NonSpatialTournamentPop extends GPPopulation {
-	private List<GPCreature> currentPop; 
-	private final int POPSIZE;
+public class SpatialTournamentPop extends GPPopulation {
+	private GPCreature[][] gridPop; 
+	private final static int NUM_NBRS=9; 
+	private final int N; //side length of the NxN grid
 	private long RUNNUM; //A random long identifying this run
 	private final Random RANDGEN;
 	private final Class<? extends GPCreature> CREATURE_TYPE; 
@@ -24,24 +25,26 @@ public class NonSpatialTournamentPop extends GPPopulation {
 
 	private int numGensSoFar = 1; 
 
-	public NonSpatialTournamentPop() 
+	public SpatialTournamentPop() 
 			throws InstantiationException, IllegalAccessException{
-		this.POPSIZE = GPConfig.getPopSize(); 
-		this.RANDGEN = GPConfig.getRandGen();
+		this.N = GPConfig.getSpatialPopSize(); 
+		this.RANDGEN = GPConfig.getRandGen(); 
 		this.RUNNUM=0; 
 
 		while (RUNNUM <=0)
 			this.RUNNUM = RANDGEN.nextLong(); 
 
 		this.CREATURE_TYPE = GPConfig.getCreatureType(); 
-		this.currentPop = new ArrayList<GPCreature>(); 
-		for (int i = 0; i < POPSIZE; i++) {
-			GPCreature c = CREATURE_TYPE.newInstance(); 
-			c.setId(i); 
-			currentPop.add(c); 
+		this.gridPop = new GPCreature[N][N]; 
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				GPCreature c = CREATURE_TYPE.newInstance(); 
+				c.setId(i*N + j); 
+				gridPop[i][j] = c; 
+			}
 		}
 		/**Pre-compute Prob(selection) = 2^(-RANK)*/
-		probDistro = new double[GPConfig.getTournySize()]; 
+		probDistro = new double[NUM_NBRS]; 
 		double cumProb = 0.0; 
 		double curProb = 1.0; 
 		for (int i = 0; i < probDistro.length; i++) {
@@ -61,30 +64,37 @@ public class NonSpatialTournamentPop extends GPPopulation {
 
 	@Override
 	public List<GPCreature> getNewestGeneration() {
-		return currentPop;
+		List<GPCreature> gridToList = new ArrayList<GPCreature>(); 
+		for (GPCreature[] cs: gridPop) 
+			for (GPCreature c: cs) 
+				gridToList.add(c); 
+		return gridToList;
 	}
 
 	@Override
 	public void computeFitnesses() {
-		for (GPCreature c: currentPop) {
-			c.computeFitness(); 
-		}
+		for (GPCreature[] cs: gridPop) 
+			for (GPCreature c: cs)
+				c.computeFitness(); 
 	}
 
 	@Override
 	public void evolveNextGeneration() {
-		List<GPCreature> newGen = new ArrayList<GPCreature>(); 
-		for (GPCreature c: currentPop) {
-			newGen.add(getReplacement(c)); 
-		}
-		currentPop = newGen; 	
-		for (GPCreature c: currentPop) 
-			c.invalidateFitness(); 
+		GPCreature[][] newGen = new GPCreature[N][N]; 
+		for (int i=0; i<N; i++) 
+			for (int j = 0; j < N; j++)
+				newGen[i][j]=getReplacement(i,j); 
+
+		gridPop = newGen; 	
+		for (GPCreature[] cs: gridPop) 
+			for (GPCreature c: cs) 
+				c.invalidateFitness(); 
 		 
 		++numGensSoFar; 
 	}
 
-	private GPCreature getReplacement(GPCreature current) {
+	private GPCreature getReplacement(int r, int c) {
+		GPCreature current = gridPop[r][c]; 
 		/**First see if crossover occurs for this creature*/
 		double randDouble = RANDGEN.nextDouble(); 
 		if (randDouble >= GPConfig.getProbCrossover())
@@ -92,22 +102,27 @@ public class NonSpatialTournamentPop extends GPPopulation {
 
 		/**Randomly select TOURNY_SIZE-1 opponents*/
 		List<GPCreature> pool = new ArrayList<GPCreature>();
-		pool.add(current); 
-		int TOURNY_SIZE = GPConfig.getTournySize();
-		for (int i = 0; i < TOURNY_SIZE-1; i++) {
-			int randIndex = RANDGEN.nextInt(currentPop.size()); 
-			pool.add(currentPop.get(randIndex)); 
+
+		for (int i = r-1; i <= r+1; i++) {
+			for (int j = c-1; j <= c+1; j++) {
+				int iMod = (i < 0 ? i + N : i % N); //Deal with the fact that % op
+				int jMod = (j < 0 ? j + N : j % N); //returns negative values
+				assert (gridPop[iMod][jMod] != null) : "NULL entry in gridPop ("
+												  + i + "," + j + ")"; 
+				pool.add(gridPop[iMod][jMod]); 
+				//System.out.println(gridPop[i][j].toString()); 
+			}
 		}
 
 		/**Sort by fitness in descending order*/
 		java.util.Collections.sort(pool);
 		java.util.Collections.reverse(pool); 
+
 		try {
 			assert(pool.get(0).getFitness() >= pool.get(1).getFitness()):
 				"NonSpatialTournamentPop: tournament pool not sorted."; 
 		}
 		catch (InvalidFitnessException e) {}
-
 
 		randDouble = RANDGEN.nextDouble();
 		GPCreature winner = null;
@@ -146,16 +161,27 @@ public class NonSpatialTournamentPop extends GPPopulation {
 
 	@Override
 	public int getPopSize() {
-		return POPSIZE;
+		return N*N;
 	}
 
 
 	@Override
 	public GPCreature getBestCreature() {
-		List<GPCreature> shallowCopy = new ArrayList<GPCreature>(currentPop); 
-		java.util.Collections.sort(shallowCopy); 
+		double bestFitness = Double.MIN_VALUE; 
+		GPCreature bestGuy = null; 
+		try {
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j < N; j++)
+				if (gridPop[i][j].getFitness() > bestFitness) {
+					bestFitness = gridPop[i][j].getFitness(); 
+					bestGuy = gridPop[i][j]; 
+				}
 
-		return shallowCopy.get(shallowCopy.size() - 1); 
+		} catch (InvalidFitnessException e) {
+			System.err.println("Tried to get best creature before computing fitnesses."); 
+			return null; 
+		}
+		return bestGuy; 
 	}
 
 	@Override
@@ -166,10 +192,12 @@ public class NonSpatialTournamentPop extends GPPopulation {
 						   String.format("%1$-12s", "NUM_GENS"); 
 		shortInfo.add(colHeader); 
 
-		for(GPCreature c: currentPop) {
-			String info = String.format("%1$-12d",c.getId()) 
-						+ String.format("%1$-12.4f",c.getFitness()); 
-			shortInfo.add(info); 
+		for(GPCreature[] cs: gridPop) {
+			for (GPCreature c: cs) {
+				String info = String.format("%1$-12d",c.getId()) 
+							+ String.format("%1$-12.4f",c.getFitness()); 
+				shortInfo.add(info); 
+			}
 		}
 		return shortInfo;
 	}
