@@ -4,13 +4,13 @@
 SEED NULL			#NULL indicates to get a new seed with System.currentTimeMillis
 POP_SIZE 1600
 TOURNY_SIZE 9 		#Used for non-spatial tournament populations
-PROB_CROSS 1.0 		#probability that winner of tournament crosses over.
-NUM_GENS 500 		#terminate after 50 generations
+PROB_CROSS 0.9 		#probability that winner of tournament crosses over.
+NUM_GENS 100 		#terminate after 50 generations
 MAX_FITNESS 100 	#terminate if some creature has fitness > MAX_FITNESS
 GP_DEPTH 4 			#starting depth for GP trees
 
 POP_CLASS capps.gp.gppopulations.NonSpatialTournamentPop
-CREATURE_CLASS capps.gp.gpcreatures.SinSqCreature
+CREATURE_CLASS capps.gp.gpcreatures.SinCreature
 
 OUTPUT_FINAL_GEN true
 OUTPUT_SHORT true

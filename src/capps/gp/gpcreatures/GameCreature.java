@@ -13,6 +13,7 @@ public abstract class GameCreature extends GenericCreature {
 
 	public abstract RESULT play(GameCreature c); 
 
+	/**Must call this function before attempting to compute the fitness.*/
 	public void setOpponents(List<GameCreature> opps) {
 		opponents = opps; 
 	}
@@ -28,5 +29,6 @@ public abstract class GameCreature extends GenericCreature {
 			else if (r== RESULT.LOSS)
 				fitness-=1.0; 
 		}
+		p_isFitnessValid = true; 
 	}
 }

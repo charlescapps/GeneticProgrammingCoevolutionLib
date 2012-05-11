@@ -17,24 +17,16 @@ public class SpatialTournamentPop extends GPPopulation {
 	private GPCreature[][] gridPop; 
 	private final static int NUM_NBRS=9; 
 	private final int N; //side length of the NxN grid
-	private long RUNNUM; //A random long identifying this run
-	private final Random RANDGEN;
-	private final Class<? extends GPCreature> CREATURE_TYPE; 
 
 	private double[] probDistro; 
 
-	private int numGensSoFar = 1; 
-
 	public SpatialTournamentPop() 
 			throws InstantiationException, IllegalAccessException{
+
+		super(); 
+
 		this.N = GPConfig.getSpatialPopSize(); 
-		this.RANDGEN = GPConfig.getRandGen(); 
-		this.RUNNUM=0; 
 
-		while (RUNNUM <=0)
-			this.RUNNUM = RANDGEN.nextLong(); 
-
-		this.CREATURE_TYPE = GPConfig.getCreatureType(); 
 		this.gridPop = new GPCreature[N][N]; 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -58,10 +50,18 @@ public class SpatialTournamentPop extends GPPopulation {
 	}
 
 	@Override
-	public long getSeedUsed() {
-		return GPConfig.getSeed();
+	public void evolveNextGeneration() {
+		saveGenInfo(); 
+		GPCreature[][] newGen = new GPCreature[N][N]; 
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				newGen[i][j] = getReplacement(i, j); 
+				newGen[i][j].invalidateFitness(); 
+			}
+		}
+		this.gridPop = newGen;  
+		++numGensSoFar; 
 	}
-
 	@Override
 	public List<GPCreature> getNewestGeneration() {
 		List<GPCreature> gridToList = new ArrayList<GPCreature>(); 
@@ -78,19 +78,11 @@ public class SpatialTournamentPop extends GPPopulation {
 				c.computeFitness(); 
 	}
 
-	@Override
-	public void evolveNextGeneration() {
-		GPCreature[][] newGen = new GPCreature[N][N]; 
-		for (int i=0; i<N; i++) 
-			for (int j = 0; j < N; j++)
-				newGen[i][j]=getReplacement(i,j); 
-
-		gridPop = newGen; 	
-		for (GPCreature[] cs: gridPop) 
-			for (GPCreature c: cs) 
-				c.invalidateFitness(); 
-		 
-		++numGensSoFar; 
+	@Override 
+	protected GPCreature getReplacement(GPCreature c) {
+		int row = c.getId() / N; 
+		int col = c.getId() % N; 
+		return getReplacement(row, col); 
 	}
 
 	private GPCreature getReplacement(int r, int c) {
@@ -155,56 +147,8 @@ public class SpatialTournamentPop extends GPPopulation {
 	}
 
 	@Override
-	public long getRunNum() {
-		return RUNNUM;
-	}
-
-	@Override
 	public int getPopSize() {
 		return N*N;
-	}
-
-
-	@Override
-	public GPCreature getBestCreature() {
-		double bestFitness = Double.MIN_VALUE; 
-		GPCreature bestGuy = null; 
-		try {
-		for (int i = 0; i < N; i++) 
-			for (int j = 0; j < N; j++)
-				if (gridPop[i][j].getFitness() > bestFitness) {
-					bestFitness = gridPop[i][j].getFitness(); 
-					bestGuy = gridPop[i][j]; 
-				}
-
-		} catch (InvalidFitnessException e) {
-			System.err.println("Tried to get best creature before computing fitnesses."); 
-			return null; 
-		}
-		return bestGuy; 
-	}
-
-	@Override
-	public List<String> getFinalGenInfo() throws InvalidFitnessException {
-		List<String> shortInfo = new ArrayList<String>(); 
-		String colHeader = String.format("%1$-12s", "ID") +
-						   String.format("%1$-12s", "FITNESS") +
-						   String.format("%1$-12s", "NUM_GENS"); 
-		shortInfo.add(colHeader); 
-
-		for(GPCreature[] cs: gridPop) {
-			for (GPCreature c: cs) {
-				String info = String.format("%1$-12d",c.getId()) 
-							+ String.format("%1$-12.4f",c.getFitness()); 
-				shortInfo.add(info); 
-			}
-		}
-		return shortInfo;
-	}
-
-	@Override
-	public List<String> getShortGenInfo() throws InvalidFitnessException {
-		return null;
 	}
 
 	@Override
@@ -214,9 +158,12 @@ public class SpatialTournamentPop extends GPPopulation {
 	}
 
 	@Override
-	public Class<? extends GPCreature> getCreatureType() {
-		// TODO Auto-generated method stub
-		return CREATURE_TYPE;
+	protected void setNewestGeneration(List<? extends GPCreature> creatures) {
+		assert(creatures.size() == getPopSize()); 
+		int popsize = getPopSize(); 
+		for (int i = 0; i < popsize; i++) 
+			gridPop[i/N][i%N] = creatures.get(i); 
+		
 	}
 
 

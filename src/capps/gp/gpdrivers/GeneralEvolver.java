@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+import java.util.List;
+
 import capps.gp.gpcreatures.GPCreature;
 
 import capps.gp.gpglobal.GPConfig;
@@ -73,7 +75,8 @@ public class GeneralEvolver {
 		if (GPConfig.outputShort()) {
 			System.out.println("Writing short info to " + GPConfig.getShortInfoFile()); 
 			fw = new FileWriter(GPConfig.getOutputDir() + "/" + GPConfig.getShortInfoFile()); 
-			for (String row: myPop.getShortGenInfo())
+			List<String> shortInfo = myPop.getShortGenInfo(); 
+			for (String row: shortInfo)
 				fw.write(row + "\n"); 
 			fw.close(); 
 		}

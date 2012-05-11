@@ -2,7 +2,7 @@
 #Used for a spatial, tournament-based evolution
 
 SEED NULL			#NULL indicates to get a new seed with System.currentTimeMillis
-POP_SIZE 1000
+POP_SIZE 1000 		#This is ignored for Spatial populations
 POP_SIZE_SPATIAL 40 #Side length N for an NxN grid spatial population
 TOURNY_SIZE 9 		#Used for non-spatial tournament populations
 PROB_CROSS 0.9 		#probability that winner of tournament crosses over.
@@ -11,7 +11,7 @@ MAX_FITNESS 100 	#terminate if some creature has fitness > MAX_FITNESS
 GP_DEPTH 4 			#starting depth for GP trees
 
 POP_CLASS capps.gp.gppopulations.SpatialTournamentPop
-CREATURE_CLASS capps.gp.gpcreatures.SinSqCreature
+CREATURE_CLASS capps.gp.gpcreatures.IteratedLogCreature
 
 OUTPUT_FINAL_GEN true
 OUTPUT_SHORT true
