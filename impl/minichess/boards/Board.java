@@ -1,11 +1,12 @@
 package minichess.boards; 
 
+import minichess.*;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Board {
-
-	public static enum COLOR {WHITE, BLACK};
+public class Board implements Iterable<PIECE>{
 
 	public static final int ROWS = 6; 
 	public static final int COLS = 5; 
@@ -19,6 +20,10 @@ public class Board {
 
 	public COLOR getWhoseTurn() {
 		return whoseTurn;
+	}
+
+	public COLOR getWinner() {
+		return winner;
 	}
 
 	public boolean isGameOver() {
@@ -251,10 +256,10 @@ public class Board {
 
     public void performMove(Move m) { //Perform a move and set appropriate flags
     	
-    	int r1 = m.row1; 
-    	int c1 = m.col1;
-    	int r2 = m.row2; 
-    	int c2 = m.col2; 
+    	final int r1 = m.row1; 
+    	final int c1 = m.col1;
+    	final int r2 = m.row2; 
+    	final int c2 = m.col2; 
     	
     	PIECE toMove = boardState[r1][c1];
     	PIECE taken  = boardState[r2][c2];
@@ -277,7 +282,7 @@ public class Board {
     	if (taken == PIECE.B_KING) { //win conditions
     		isGameOver = true; 
     		winner = COLOR.WHITE; 
-			return;
+			return; 
     	}
     	else if (taken == PIECE.W_KING) {
     		isGameOver = true; 
@@ -303,12 +308,17 @@ public class Board {
 
     }
     
+	@Override
+	public String toString() {
+		return this.toString(false); 
+	}
+
     public String toString(boolean reverseBoardDisplay) { //Print in awesome format
         
         StringBuilder sb = new StringBuilder();
         
         if (isGameOver) {
-        	sb.append("*******************************\n   GAME OVER, " + 
+        	sb.append("    GAME OVER, " + 
         				(winner == null ? "NOBODY" : winner) + 
         				" wins!\n*******************************\n" );
         }
@@ -367,5 +377,44 @@ public class Board {
 	@Override
 	public Object clone() {
 		return new Board(this); 
+	}
+
+	@Override
+	public Iterator<PIECE> iterator() {
+		return new BoardIter();
+	}
+
+	private class BoardIter implements Iterator<PIECE> {
+		private int r; 
+		private int c;
+
+		public BoardIter() {
+			this.r = 0;
+			this.c = 0; 
+		}
+
+		@Override
+		public boolean hasNext() {
+			if (r >= ROWS)
+				return false;
+			return true; 
+		}
+
+		@Override
+		public PIECE next() {
+			PIECE p = boardState[r][c]; 
+			++c; 
+			if (c >= COLS){
+				c = 0;
+				++r; 
+			}
+			return p;
+		}
+
+		@Override
+		public void remove() {
+			
+		}
+
 	}
 }

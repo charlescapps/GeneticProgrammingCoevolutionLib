@@ -7,30 +7,36 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import minichess.*;
 import minichess.boards.*;
 import minichess.exceptions.*;
+import minichess.heuristic.HeuristicInterface;
 
-public class HumanPlayer implements PlayerInterface {
+public class HumanPlayer implements AiInterface {
 	private BufferedReader in; 
 	private BufferedWriter out;
-	private Board.COLOR myColor;
+	private COLOR myColor;
 	
-	public HumanPlayer(Board.COLOR c) {
+	public HumanPlayer() {
+		in  = new BufferedReader(new InputStreamReader(System.in));
+		out = new BufferedWriter(new OutputStreamWriter(System.out));
+	}
+
+	public HumanPlayer(COLOR c) {
 		this.myColor = c; 
 		in  = new BufferedReader(new InputStreamReader(System.in));
 		out = new BufferedWriter(new OutputStreamWriter(System.out));
 	}
+
+	public void setColor(COLOR c) {
+		this.myColor = c; 
+	}
 	
 	//In case you weren't getting input from the keyboard
-	public HumanPlayer(Board.COLOR c, BufferedReader in, BufferedWriter out) {
+	public HumanPlayer(COLOR c, BufferedReader in, BufferedWriter out) {
 		this.myColor = c; 
 		this.in = in; 
 		this.out = out; 
-	}
-
-	@Override
-	public Board.COLOR getColor() {
-		return myColor;
 	}
 	
 	@Override
@@ -55,7 +61,7 @@ public class HumanPlayer implements PlayerInterface {
 		List<Move> moves = b.getAllValidMoves(); 
 		
 		while (m == null) {
-			out.write("Enter a move (e.g. 'b5-b4'>"); 
+			out.write("Enter a move (e.g. 'b5-b4')>"); 
 			out.flush();
 			userInput = in.readLine();
 			out.newLine();
@@ -74,6 +80,23 @@ public class HumanPlayer implements PlayerInterface {
 			}
 		}
 		return m;
+	}
+
+	@Override
+	public COLOR getColor() {
+		return myColor;
+	}
+
+	@Override
+	public HeuristicInterface getHeuristic() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setHeuristic(HeuristicInterface hi) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
