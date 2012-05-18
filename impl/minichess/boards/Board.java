@@ -97,6 +97,10 @@ public class Board implements Iterable<PIECE>{
 		this.validMoveCache = toCopy.validMoveCache; 
 	}
 
+    public PIECE[][] getBoardState() {
+        return boardState;
+    }
+
 	/**Scan through each position on the board, and add all the getAllValidMoves for each
 	 * piece to a list. */
     public List<Move> getAllValidMoves() { //Get all the getAllValidMoves as an LinkedList<Move>

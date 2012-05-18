@@ -1,19 +1,33 @@
 TODO: 
 
+-Run on other machines
+	- steens (ubuntu)
+	sisters (ubuntu)
+	kamet (ubuntu)
+	sangre (mac)
+	fuji (mac)
+
 -Data output
-	- Header from static GPConfig class (because it's global data)
-	- "short" output from Population class
+	X Header from static GPConfig class (because it's global data)
+		*Changed this to be from population class. 
+		*Includes info such as best fitness
+	X "short" output from Population class
+		*made this data about each creature in final generation
+	- Size of best tree for each generation (no. of nodes) 
 	- "long" output (possibly List<String>, one for each creature)
 
 -GPCreature
 	X Crossover, decided it's governed by the creature class. 
 	- Mutate...optional
+	- Start on minichess! 
 
 -GPPopulation
-	- SpatialTournyPop
 	- SpatialGamePop //With creatures that play one-on-one games
 	- NonSpatialGamePop  
+	X SpatialTournyPop
 	X NonSpatialTournyPop
+
+	- Parasites for function approximation (test cases)
 
 Save library in JAR file, create a new repo for
 application to minichess. Much cleaner this way. 

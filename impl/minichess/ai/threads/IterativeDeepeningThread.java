@@ -44,7 +44,7 @@ public class IterativeDeepeningThread extends Thread {
 	}
 	
 	public Move getMove() {
-		System.out.println("\nDEBUG: Iterative Deepening returned move while searching at depth: " + depth); 
+		//System.out.println("\nDEBUG: Iterative Deepening returned move while searching at depth: " + depth); 
 		
 		return toPlay;
 	}

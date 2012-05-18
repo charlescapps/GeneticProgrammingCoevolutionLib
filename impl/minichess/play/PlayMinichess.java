@@ -86,10 +86,15 @@ public class PlayMinichess implements PlayInterface{
 		out.newLine(); 
 		out.write(currentBoard.toString(false)); //Print board
 		out.newLine(); 
+
+        out.write("Black heuristic value: " + 
+                String.format("%1$.3f", blackPlayer.getHeuristic().evaluateBoard(currentBoard)));
+        out.newLine();
+		out.write("Board point value: " + ph.evaluateBoard(currentBoard)); 
+        out.newLine();
 		out.write("Previous Move: " + (lastMovePlayed==null ? 
 					"No previous move." : 
 					lastMovePlayed.toString())) ;
-		System.out.println("Board point value: " + ph.evaluateBoard(currentBoard)); 
 
 		out.newLine();
 		out.flush(); 
