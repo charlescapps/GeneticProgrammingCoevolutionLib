@@ -18,6 +18,10 @@ public abstract class GameCreature extends GenericCreature {
 		opponents = opps; 
 	}
 
+    public List<GameCreature> getOpponents() {
+        return opponents;
+    }
+
 	@Override
 	public void computeFitness() {
 		assert (opponents != null && opponents.size() > 0); 

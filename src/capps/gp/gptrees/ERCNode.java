@@ -3,7 +3,7 @@ package capps.gp.gptrees;
 import capps.gp.gpglobal.GPConfig;
 
 public class ERCNode extends GPTerminal implements Cloneable{
-    private double value; 
+    private final double value; 
 
 	public ERCNode() {
 		value = GPConfig.getRandGen().nextDouble()*4.0 - 2.0;
@@ -21,9 +21,7 @@ public class ERCNode extends GPTerminal implements Cloneable{
 
 	@Override
 	public Object clone() {
-		ERCNode cloneNode = new ERCNode(); 
-		cloneNode.value = this.value; 
-		return cloneNode; 
+		return this; 
 	}
 
 }

@@ -25,7 +25,7 @@ public class GenericCreature extends GPCreature {
 
 	@Override
 	public void mutate() {
-		// TODO Auto-generated method stub
+        this.genericMutate();
 	}
 
 	@Override

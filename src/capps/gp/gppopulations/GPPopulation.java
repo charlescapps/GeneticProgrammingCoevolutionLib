@@ -28,7 +28,6 @@ public abstract class GPPopulation {
 
 	public abstract int getPopSize();
 
-
 	public GPPopulation() {
 		this.saveShortInfo = GPConfig.outputShort(); 
 		this.saveLongInfo = GPConfig.outputLong();
@@ -80,8 +79,13 @@ public abstract class GPPopulation {
 		for (GPCreature c: currentGen) {
 			newGen.add(getReplacement(c)); 
 		}
-		for (GPCreature c: newGen) 
+		for (GPCreature c: newGen) {
+            double chanceMutate = RANDGEN.nextDouble(); 
+            if (chanceMutate <= GPConfig.getProbMutate())
+                c.mutate();
+
 			c.invalidateFitness(); 
+        }
 		this.setNewestGeneration(newGen); 	
 		 
 		++numGensSoFar; 

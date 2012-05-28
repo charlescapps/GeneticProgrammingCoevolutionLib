@@ -18,7 +18,7 @@ import minichess.config.MinichessConfig;
 public class MinichessCreature 
     extends GameCreature implements HeuristicInterface {
 
-    private AiInterface myMinichessAi; 
+    protected AiInterface myMinichessAi; 
 
     /** Constructs a new MinichessCreature. 
      *  Adds terminal nodes that are specific to Minichess. 
@@ -91,6 +91,8 @@ public class MinichessCreature
             return RESULT.DRAW; 
         else if (playAsWhite && winner==COLOR.WHITE)
             return RESULT.WIN; 
+        else if (!playAsWhite && winner==COLOR.BLACK)
+            return RESULT.WIN; 
         else 
             return RESULT.LOSS;
 	}
@@ -99,5 +101,10 @@ public class MinichessCreature
 	public double evaluateBoard(Board b) {
 		return myGpTree.getResult(new MinichessState(b));
 	}
+
+    @Override
+    public String toString() {
+        return myGpTree.toString(); 
+    }
 
 }

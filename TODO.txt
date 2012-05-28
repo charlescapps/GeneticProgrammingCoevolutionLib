@@ -18,12 +18,12 @@ TODO:
 
 -GPCreature
 	X Crossover, decided it's governed by the creature class. 
-	- Mutate...optional
+	X Mutate...optional
 	- Start on minichess! 
 
 -GPPopulation
 	- SpatialGamePop //With creatures that play one-on-one games
-	- NonSpatialGamePop  
+	X NonSpatialGamePop  
 	X SpatialTournyPop
 	X NonSpatialTournyPop
 

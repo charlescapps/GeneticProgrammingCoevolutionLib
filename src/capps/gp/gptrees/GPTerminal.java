@@ -6,7 +6,7 @@ import java.util.List;
  * A GP Node that has no children. Used for GPTree to know how to randomly
  * generate trees of a fixed depth.
  */
-public abstract class GPTerminal extends GPNode {
+public abstract class GPTerminal extends GPNode implements Cloneable{
 
     public abstract double interpretForResult(GameState state); 
 

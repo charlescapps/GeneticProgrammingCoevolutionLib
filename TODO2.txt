@@ -1,0 +1,38 @@
+5-16-12
+
+Head not in the game, must summarize my plan to continue. Need to create
+Creature class for minichess. Need to create simple class in my minichess
+code to play two AIs and return a RESULT. 
+
+Need to have a /gamestate package. Need to throw a Board in there. Need to
+make sensor nodes. They will cast their GameState to a Board and compute 
+stuff. 
+
+X  Simple class to play 2 AIs against each other. 
+X  gpgamestate package
+X  MinichessState class
+_  Sensors. Look at notes.
+    X number of pawns, etc.
+    X pawns in center
+    X bishops off back row
+    _ squares knight can attack
+    X rooks with open file
+X  Make MinichessCreature class
+     X Need to make MinichessCreature implement HeuristicInterface
+     X Then, instantiate a new AbNegaMax, set "this" to its heuristic. 
+_  Make MCCreaturSimple class. Fitness is just how many games it wins against
+AlphaBetaNegaMax
+
+
+Performance ideas: 
+
+* Have MinichessState cache number of pawns
+    -problem: only using minichess state once. 
+    -not quite true: used for 1 execution of the heuristic. 
+* Make GPNode classes implement a way to get a common instance. Singleton design
+    pattern. 
+    -Would need a wrapper class for Class<? extends GPNode> 
+    -function getNewInstance()
+    -For nodes that don't change, return a singleton value. 
+
+*At least easy to do this for cloned nodes, by returning this. 

@@ -29,12 +29,17 @@ public class GPTreeTest {
 		funcs.add(MultFunc.class); 
 		funcs.add(DivideFunc.class); 
 		funcs.add(MinusFunc.class); 
+		funcs.add(MaxFunc.class); 
+		funcs.add(MinFunc.class); 
+		funcs.add(IfLessThanFunc.class); 
+
 		try{
 			GPConfig.loadConfig(new BufferedReader(
-					new FileReader("configs/nonspatial.gp"))); 
+					new FileReader("gp_configs/sinsqrd_spatial.gp"))); 
 		}
 		catch (Exception e) {
 			System.err.println("Exception creating GPTreeTest class."); 
+            e.printStackTrace(); 
 		}
 	}
 
@@ -89,6 +94,32 @@ public class GPTreeTest {
 
 			t1Crossed.close(); 
 			t2Crossed.close(); 
+		}
+		catch (IOException e) {
+
+		}
+	}
+
+	@Test
+	public void testMutate() {
+		GenericCreature c1 = new GenericCreature(3, funcs, terms); 
+        System.out.println("Testing mutate() function."); 
+
+		FileWriter t1File;
+		FileWriter t2File;
+		
+		try {	
+			t1File = new FileWriter("dots/beforeMutate.dot"); 
+			t2File = new FileWriter("dots/afterMutate.dot"); 
+			
+			t1File.write(c1.getTree().toDot("before mutation")); 
+
+            c1.mutate(); 
+
+			t2File.write(c1.getTree().toDot("after mutation")); 
+			
+			t1File.close(); 
+			t2File.close(); 
 		}
 		catch (IOException e) {
 

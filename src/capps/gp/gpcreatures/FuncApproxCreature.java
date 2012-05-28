@@ -36,6 +36,7 @@ public abstract class FuncApproxCreature extends GenericCreature
 		funcs.add(MinusFunc.class); 
 		funcs.add(MaxFunc.class); 
 		funcs.add(MinFunc.class); 
+		funcs.add(IfLessThanFunc.class); 
 
 		this.xInc = (xMax() - xMin())/numPoints(); 
 		this.myGpTree = new GPTree(GPConfig.getGpDepth(), GPTree.METHOD.FULL, funcs, terms); 

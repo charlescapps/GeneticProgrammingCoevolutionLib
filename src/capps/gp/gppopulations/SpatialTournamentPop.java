@@ -56,6 +56,11 @@ public class SpatialTournamentPop extends GPPopulation {
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				newGen[i][j] = getReplacement(i, j); 
+
+                double chanceMutate = RANDGEN.nextDouble(); 
+                if (chanceMutate <= GPConfig.getProbMutate())
+                    newGen[i][j].mutate();
+
 				newGen[i][j].invalidateFitness(); 
 			}
 		}

@@ -24,6 +24,7 @@ public class GPConfig {
 	private static final String _NULL_SEED = "NULL"; 
 	private static final String _NUM_GENS = "NUM_GENS"; 
 	private static final String _PROB_CROSS = "PROB_CROSS"; 
+	private static final String _PROB_MUTATE = "PROB_MUTATE"; 
 	private static final String _MAX_FITNESS = "MAX_FITNESS"; 
 	private static final String _POP_SIZE = "POP_SIZE"; 
 	private static final String _SPATIAL_POP_SIZE = "POP_SIZE_SPATIAL"; 
@@ -45,6 +46,7 @@ public class GPConfig {
 
 	private static Long seed; //if NULL, use System.currentTimeMillis()
 	private static Double probCrossover;
+	private static Double probMutate;
 	private static Double maxFitness; 
 	private static Integer numGens;
 	private static Integer popSize;
@@ -108,6 +110,10 @@ public class GPConfig {
 			//CASE "PROB_CROSSOVER"
 			else if (tokens[0].equals(_PROB_CROSS)) {
 				GPConfig.probCrossover = Double.parseDouble(tokens[1]); 
+			}
+			//CASE "PROB_MUTATE"
+			else if (tokens[0].equals(_PROB_MUTATE)) {
+				GPConfig.probMutate = Double.parseDouble(tokens[1]); 
 			}
 			//CASE "MAX_FITNESS"
 			else if (tokens[0].equals(_MAX_FITNESS)) {
@@ -184,6 +190,10 @@ public class GPConfig {
 
 	public static Double getProbCrossover() {
 		return probCrossover; 
+	}
+
+	public static Double getProbMutate() {
+		return probMutate; 
 	}
 
 	public static Double getMaxFitness() {

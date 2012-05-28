@@ -125,6 +125,20 @@ public abstract class GPCreature implements Cloneable, Comparable<GPCreature>{
 				tmp); 
 	}
 
+    public void genericMutate() {
+        GPTree.ParentChild mutatePoint = myGpTree.getRandomSubtree(); 
+        if (mutatePoint.parent == null)
+            return; 
+
+        int subtreeHeight = GPTree.getHeightRecurse(mutatePoint.parent) - 1; 
+        GPTree mutatedTree = new GPTree(subtreeHeight, GPTree.METHOD.FULL, 
+                this.myGpTree.getFuncs(), this.myGpTree.getTerms()); 
+
+        mutatePoint.parent.getSubtrees().set(mutatePoint.childIndex, 
+                mutatedTree.getRoot()); 
+
+    }
+
 	/**Default implementation of producing offspring. 
 	 * Make clones of parents, then return result of crossover*/
 	public GPCreature genericGetOffspring(GPCreature mate) {
@@ -133,6 +147,11 @@ public abstract class GPCreature implements Cloneable, Comparable<GPCreature>{
 		clone1.genericCrossover(clone2); 
 		return clone1;
 	}
+
+    @Override
+    public String toString() {
+        return myGpTree.toString(); 
+    }
 
 	@Override
 	public abstract Object clone(); 

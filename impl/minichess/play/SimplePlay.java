@@ -4,10 +4,8 @@ import minichess.ai.AiInterface;
 import minichess.boards.Board;
 import minichess.*; 
 
-import minichess.heuristic.PointHeuristic;
 
 public class SimplePlay {
-    private static final PointHeuristic h = new PointHeuristic(); 
 
     /**Returns WHITE if white wins, BLACK if black wins, null for a draw.*/
     public static COLOR playGame(AiInterface whitePlayer, 
@@ -24,9 +22,8 @@ public class SimplePlay {
         }
 
         System.out.println(b); 
-        COLOR winner= b.getWinner(); 
 
-        return winner; 
+        return b.getWinner(); 
     }
 
 }

@@ -17,8 +17,9 @@ import capps.gp.gpglobal.GPConfig;
 public class NonSpatialGamePop extends GPPopulation {
 	private List<GameCreature> currentPop; 
 	private final int POPSIZE;
+    private final int TOURNY_SIZE; 
 
-	private double[] probDistro; 
+	private final double[] probDistro; 
 
 	private int numGensSoFar = 1; 
 
@@ -27,6 +28,7 @@ public class NonSpatialGamePop extends GPPopulation {
 
 		super(); 
 		this.POPSIZE = GPConfig.getPopSize(); 
+        this.TOURNY_SIZE = GPConfig.getTournySize();
 
 		this.currentPop = new ArrayList<GameCreature>(); 
 		for (int i = 0; i < POPSIZE; i++) {
@@ -35,7 +37,7 @@ public class NonSpatialGamePop extends GPPopulation {
 			currentPop.add(c); 
 		}
 		/**Pre-compute Prob(selection) = 2^(-RANK)*/
-		probDistro = new double[GPConfig.getTournySize()]; 
+		probDistro = new double[TOURNY_SIZE]; 
 		double cumProb = 0.0; 
 		double curProb = 1.0; 
 		for (int i = 0; i < probDistro.length; i++) {
@@ -55,8 +57,14 @@ public class NonSpatialGamePop extends GPPopulation {
 		for (GPCreature c: currentPop) {
 			newGen.add(getReplacement(c)); 
 		}
-		for (GPCreature c: newGen) 
+		for (GPCreature c: newGen) {
+            double chanceMutate = RANDGEN.nextDouble(); 
+
+            if (chanceMutate <= GPConfig.getProbMutate())
+                c.mutate();
+
 			c.invalidateFitness(); 
+        }
 		this.setNewestGeneration(newGen); 	
 		 
 		++numGensSoFar; 
@@ -76,12 +84,11 @@ public class NonSpatialGamePop extends GPPopulation {
 	@Override
 	public void computeFitnesses() {
 
-		int TOURNY_SIZE = GPConfig.getTournySize();
-
+        final int maxIndex = TOURNY_SIZE - 1;
 		for (GameCreature c: currentPop) {
 			/**Randomly select TOURNY_SIZE-1 opponents*/
 			List<GameCreature> pool = new ArrayList<GameCreature>();
-			for (int i = 0; i < TOURNY_SIZE-1; i++) {
+			for (int i = 0; i < maxIndex; i++) {
 				int randIndex = RANDGEN.nextInt(POPSIZE); 
 				pool.add(currentPop.get(randIndex)); 
 			}
@@ -99,20 +106,17 @@ public class NonSpatialGamePop extends GPPopulation {
 		if (randDouble >= GPConfig.getProbCrossover())
 			return current; //do nothing in this case
 
-		/**Randomly select TOURNY_SIZE-1 opponents*/
-		List<GameCreature> pool = new ArrayList<GameCreature>();
-		int TOURNY_SIZE = GPConfig.getTournySize();
-		for (int i = 0; i < TOURNY_SIZE-1; i++) {
-			int randIndex = RANDGEN.nextInt(currentPop.size()); 
-			pool.add((GameCreature)currentPop.get(randIndex)); 
-		}
-		pool.add((GameCreature)current); 
+        GameCreature myGameCreature = (GameCreature)current;
 
-		/**Sort by fitness in descending order*/
+		/**Get the list of opponents that was used to compute fitness*/
+		List<GameCreature> pool = myGameCreature.getOpponents(); 
+		pool.add(myGameCreature); 
+
+		/**Sort by fitness in ascending order*/
 		java.util.Collections.sort(pool);
-		java.util.Collections.reverse(pool); 
+		//java.util.Collections.reverse(pool); 
 		try {
-			assert(pool.get(0).getFitness() >= pool.get(1).getFitness()):
+			assert(pool.get(0).getFitness() <= pool.get(1).getFitness()):
 				"NonSpatialGamePop: tournament pool not sorted."; 
 		}
 		catch (InvalidFitnessException e) {}
@@ -120,10 +124,11 @@ public class NonSpatialGamePop extends GPPopulation {
 		randDouble = RANDGEN.nextDouble();
 		GameCreature winner = null;
 
+        final int maxIndex = probDistro.length - 1;
 		/**Randomly select a winner*/
-		for (int i = 0; i < probDistro.length; i++) {
+		for (int i = 0; i <= maxIndex; i++) {
 			if (randDouble < probDistro[i]) {
-				winner = pool.get(i); 
+				winner = pool.get(maxIndex - i); 
 				break; 
 			}
 		}
@@ -132,9 +137,10 @@ public class NonSpatialGamePop extends GPPopulation {
 		
 		/**Randomly choose creature to mate with the winner, return offspring*/
 		GameCreature randomMate = null; 
+        final int winnerID = winner.getId(); 
 		do { //Don't allow winner to reproduce with itself
 			randomMate = pool.get(RANDGEN.nextInt(pool.size())); 
-		} while (randomMate.getId() == winner.getId()); 
+		} while (randomMate.getId() == winnerID); 
 
 		GameCreature offspring = (GameCreature)winner.getOffspring(randomMate); 
 		offspring.setId(current.getId()); 

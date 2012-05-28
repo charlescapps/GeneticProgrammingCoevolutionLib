@@ -60,6 +60,14 @@ public class GPTree implements Cloneable {
 		return root; 
 	}
 
+    public List<Class<? extends GPFunction>> getFuncs() {
+        return funcs;
+    }
+
+    public List<Class<? extends GPTerminal>> getTerms() {
+        return terms;
+    }
+
 	public void setRoot(GPNode root) {
 		this.root = root; 
 	}
@@ -76,7 +84,7 @@ public class GPTree implements Cloneable {
 		return getHeightRecurse(root); 
 	}
 
-	private int getHeightRecurse(GPNode n) {
+	public static int getHeightRecurse(GPNode n) {
 		if (n==null)
 			return 0; 
 		if (n.numSubtrees()==0)
@@ -275,4 +283,30 @@ public class GPTree implements Cloneable {
 
 		return cloneNode; 
 	}
+
+    @Override
+    public String toString() {
+       StringBuffer sb = new StringBuffer(); 
+
+       toStringRecurse(sb, this.root); 
+
+       return sb.toString(); 
+    }
+
+    private static void toStringRecurse(StringBuffer sb, GPNode n) {
+        if (GPFunction.class.isInstance(n)) {
+            sb.append(n.label()); 
+            for (GPNode child: n.getSubtrees()) {
+                sb.append(" ( "); 
+                toStringRecurse(sb, child); 
+                sb.append(") "); 
+            }
+        }
+        else {
+            sb.append(n.label()); 
+            sb.append(" "); 
+        }
+            
+    }
+
 }

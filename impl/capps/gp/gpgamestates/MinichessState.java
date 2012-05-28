@@ -7,7 +7,7 @@ import capps.gp.gptrees.GameState;
  * GP GameState. 
  *
  * Another solution would have been to simply have the minichess Board class
- * implement GameState, but then horrible intanglement between minichess
+ * implement GameState, but then horrible entanglement between minichess
  * code and GP code would ensue. */
 
 public class MinichessState implements GameState {
