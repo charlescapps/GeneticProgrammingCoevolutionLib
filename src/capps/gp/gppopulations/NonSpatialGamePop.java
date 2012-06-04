@@ -5,7 +5,6 @@ import java.lang.InstantiationException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import capps.gp.gpcreatures.GPCreature;
 import capps.gp.gpcreatures.GameCreature;
@@ -20,8 +19,6 @@ public class NonSpatialGamePop extends GPPopulation {
     private final int TOURNY_SIZE; 
 
 	private final double[] probDistro; 
-
-	private int numGensSoFar = 1; 
 
 	public NonSpatialGamePop() 
 			throws InstantiationException, IllegalAccessException{
@@ -60,8 +57,9 @@ public class NonSpatialGamePop extends GPPopulation {
 		for (GPCreature c: newGen) {
             double chanceMutate = RANDGEN.nextDouble(); 
 
-            if (chanceMutate <= GPConfig.getProbMutate())
+            if (chanceMutate <= GPConfig.getProbMutate()) {
                 c.mutate();
+            }
 
 			c.invalidateFitness(); 
         }
@@ -89,7 +87,12 @@ public class NonSpatialGamePop extends GPPopulation {
 			/**Randomly select TOURNY_SIZE-1 opponents*/
 			List<GameCreature> pool = new ArrayList<GameCreature>();
 			for (int i = 0; i < maxIndex; i++) {
-				int randIndex = RANDGEN.nextInt(POPSIZE); 
+                int randIndex = 0;
+                do {
+				    randIndex = RANDGEN.nextInt(POPSIZE); 
+                }
+                while (randIndex == c.getId()); //Don't allow playing against self
+
 				pool.add(currentPop.get(randIndex)); 
 			}
 			/**Play games against each opponent to compute fitness.*/
@@ -139,7 +142,10 @@ public class NonSpatialGamePop extends GPPopulation {
 		GameCreature randomMate = null; 
         final int winnerID = winner.getId(); 
 		do { //Don't allow winner to reproduce with itself
-			randomMate = pool.get(RANDGEN.nextInt(pool.size())); 
+            int randomId = RANDGEN.nextInt(pool.size()); 
+			randomMate = pool.get(randomId); 
+            /*System.out.println("Stuck! winner ID = " + winnerID + 
+                    "\nrandomID = " + randomId); */
 		} while (randomMate.getId() == winnerID); 
 
 		GameCreature offspring = (GameCreature)winner.getOffspring(randomMate); 

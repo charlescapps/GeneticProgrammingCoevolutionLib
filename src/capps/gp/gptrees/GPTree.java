@@ -297,14 +297,13 @@ public class GPTree implements Cloneable {
         if (GPFunction.class.isInstance(n)) {
             sb.append(n.label()); 
             for (GPNode child: n.getSubtrees()) {
-                sb.append(" ( "); 
+                sb.append(" "); 
                 toStringRecurse(sb, child); 
-                sb.append(") "); 
+                sb.append(" "); 
             }
         }
         else {
             sb.append(n.label()); 
-            sb.append(" "); 
         }
             
     }

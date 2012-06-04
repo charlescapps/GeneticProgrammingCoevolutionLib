@@ -139,6 +139,7 @@ public class Board implements Iterable<PIECE>{
 				if (c < COLS - 1 && r > 0 && boardState[r - 1][c + 1] != PIECE.EMPTY_PIECE && boardState[r - 1][c + 1].color() != p.color()) {
 					addToThis.add(new Move(r, c, r-1, c+1));
 				}
+                break; 
 		
 			case B_PAWN:
 				if (r < ROWS - 1 && boardState[r + 1][c] == PIECE.EMPTY_PIECE) {
@@ -150,7 +151,7 @@ public class Board implements Iterable<PIECE>{
 				if (c < COLS - 1 && r < ROWS - 1 && boardState[r + 1][c + 1] != PIECE.EMPTY_PIECE && boardState[r + 1][c + 1].color() != p.color()) {
 					addToThis.add(new Move(r, c, r + 1, c + 1));
 				}
-				break;
+                break;
 				
 			case W_KING:  //All 8 directions, only move one square, can take
 			case B_KING: 

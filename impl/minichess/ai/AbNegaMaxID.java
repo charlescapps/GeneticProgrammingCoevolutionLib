@@ -11,6 +11,7 @@ public class AbNegaMaxID extends IterativeDeepeningAI {
 	
 	public AbNegaMaxID() {
 		super();
+        this.setHeuristic(new minichess.heuristic.PointHeuristic()); 
 	}
 
 	public AbNegaMaxID(long panicTimeMillis, int minDepth) {
@@ -37,10 +38,10 @@ public class AbNegaMaxID extends IterativeDeepeningAI {
 					(b.getWhoseTurn() == COLOR.BLACK ? -boardVal : boardVal)); 
 		}
 		
-		Move bestMove = null; 
 		double bestScore = AiInterface.MIN_SCORE;
 		double subScore; 
 		List<Move> moves = b.getAllValidMoves(); 
+		Move bestMove = moves.get(0); 
 		
 		for (Move m: moves) {
 			Board boardAfterMove = b.performMoveAndClone(m);

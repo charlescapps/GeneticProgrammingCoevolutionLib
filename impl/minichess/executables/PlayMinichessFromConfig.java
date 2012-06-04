@@ -16,6 +16,8 @@ import minichess.ai.IterativeDeepeningAI;
 
 import minichess.boards.Board;
 
+import minichess.heuristic.HeuristicInterface;
+
 import minichess.play.*;
 import minichess.config.MinichessConfig;
 
@@ -61,8 +63,10 @@ public class PlayMinichessFromConfig {
 			= MinichessConfig.getWhitePlayerClass(); 
 		whitePlayer = whitePlayerClass.newInstance(); 
 		whitePlayer.setColor(COLOR.WHITE); 
-		whitePlayer.setHeuristic(
-				MinichessConfig.getWhiteHeuristicClass().newInstance()); 
+        Class<? extends HeuristicInterface> wHeur = MinichessConfig.getWhiteHeuristicClass(); 
+
+        whitePlayer.setHeuristic(wHeur.newInstance()); 
+
 		if (IterativeDeepeningAI.class.isInstance(whitePlayer)) {
 			IterativeDeepeningAI whiteID = (IterativeDeepeningAI) whitePlayer;
 			whiteID.setTimePerMove(MinichessConfig.getTimePerMove()); 
@@ -73,8 +77,11 @@ public class PlayMinichessFromConfig {
 			= MinichessConfig.getBlackPlayerClass(); 
 		blackPlayer = blackPlayerClass.newInstance(); 
 		blackPlayer.setColor(COLOR.BLACK); 
-		blackPlayer.setHeuristic(
-				MinichessConfig.getBlackHeuristicClass().newInstance()); 
+
+        Class<? extends HeuristicInterface> bHeur = MinichessConfig.getBlackHeuristicClass(); 
+
+        blackPlayer.setHeuristic(bHeur.newInstance()); 
+
 		if (IterativeDeepeningAI.class.isInstance(blackPlayer)) {
 			IterativeDeepeningAI blackID = (IterativeDeepeningAI) blackPlayer;
 			blackID.setTimePerMove(MinichessConfig.getTimePerMove()); 

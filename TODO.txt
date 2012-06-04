@@ -1,33 +1,92 @@
 TODO: 
+(updated 6-4-2012)
 
--Run on other machines
-	- steens (ubuntu)
-	sisters (ubuntu)
-	kamet (ubuntu)
-	sangre (mac)
-	fuji (mac)
+Experiment ideas:
+=====================================
 
 -Data output
 	X Header from static GPConfig class (because it's global data)
-		*Changed this to be from population class. 
-		*Includes info such as best fitness
+		-Changed this to be from population class. 
+		-Includes info such as best fitness in final gen. 
 	X "short" output from Population class
-		*made this data about each creature in final generation
-	- Size of best tree for each generation (no. of nodes) 
-	- "long" output (possibly List<String>, one for each creature)
+		-made this a summary of every generation. 
+	X Size of best tree for each generation (no. of nodes, height) 
+    X Output best creature into text file for each gen. Finished code to output
+            to text, so this is trivial.
+	_ "long" output (output every creature to text file? )
+    _ With long output, option to resume from gen #x ?
+        -Just parse every creature in a directory, add to pop
 
--GPCreature
-	X Crossover, decided it's governed by the creature class. 
-	X Mutate...optional
-	- Start on minichess! 
+_ RUN ! 
+    X First test some small runs, output AIs to text files. 
+        -manually play games against results, or against a random AI
+    _ Decide on population size, number of generations (never will be done)
+    _ 
 
--GPPopulation
-	- SpatialGamePop //With creatures that play one-on-one games
+Domain-specific ideas:
+=====================================
+
+_  Minichess Sensors. Look at notes.
+    X number of pawns, etc.
+    X pawns in center
+    X bishops off back row
+    _ squares knight can attack
+    X rooks with open file
+    _ more ideas...
+
+X  Make MinichessBeatRand class. Fitness is how many games it wins out of
+    TOURNY_SIZE - 1 games against a random move opponent.
+X  Make MinichessBeatAlphaBeta class. Fitness is just how many games it wins against
+        AlphaBetaNegaMax with basic piece cost heuristic
+
+o  Actually kinda silly to play more than 2 games (WHITE and BLACK) since it's
+pretty much deterministic for the same time per move. 
+
+o  Could modify these to compute fitness by playing games at several different
+times! Would be interesting! Actually I think I'll do this!!!
+
+Population / Big Picture ideas:
+====================================
+
+o How about implement the phantom parasite idea from that paper? 
+o Or only rewarding for getting some fitness < MAX_FITNESS ? 
+o Review papers again since I've been in coding mode for so long. 
+o Higher dimension spatial? Different topologies? 
+    --sounds ridiculous but might be fun. 
+o Different types of graphs? Maybe review some algebraic topology? 
+
+_  GPPopulation
+	X SpatialGamePop  //With creatures that play one-on-one games (co-evolution)
 	X NonSpatialGamePop  
-	X SpatialTournyPop
+	X SpatialTournyPop  //With creatures that independently get their fitness
 	X NonSpatialTournyPop
 
-	- Parasites for function approximation (test cases)
+Performance ideas: 
+=====================================
 
-Save library in JAR file, create a new repo for
-application to minichess. Much cleaner this way. 
+o Have MinichessState cache number of pawns
+    -problem: only using minichess state once per execution of gp tree 
+    -could have a "global transposition table" :
+        cache these values for many boards.
+o Make GPNode classes implement a way to get a common instance. Singleton design
+    pattern. 
+    -Would need a wrapper class for Class<? extends GPNode> 
+    -function getNewInstance()
+    -For nodes that don't change, return a singleton value. 
+    -Seems excessive
+    -Did easy solution for parsing: just get an instance of each type. 
+        --needed special case for ERC node, or anything with a variable label
+
+o At least easy to do this with clone(), by returning the same, immutable 
+    instance for any node class that doesn't have any state. done. 
+
+-Run on other machines
+	- steens (ubuntu) - running config to beat AlphaBeta
+	- sisters (ubuntu) - to run spatial game
+	- kamet (ubuntu) - running nonspatial game
+	sangre (mac)
+	fuji (mac)
+
+
+
+	- Parasites for function approximation (test cases)

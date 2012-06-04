@@ -97,7 +97,7 @@ public class SpatialTournamentPop extends GPPopulation {
 		if (randDouble >= GPConfig.getProbCrossover())
 			return current; //do nothing in this case
 
-		/**Randomly select TOURNY_SIZE-1 opponents*/
+		/**select adjacent opponents*/
 		List<GPCreature> pool = new ArrayList<GPCreature>();
 
 		for (int i = r-1; i <= r+1; i++) {
@@ -113,13 +113,6 @@ public class SpatialTournamentPop extends GPPopulation {
 
 		/**Sort by fitness in descending order*/
 		java.util.Collections.sort(pool);
-		java.util.Collections.reverse(pool); 
-
-		try {
-			assert(pool.get(0).getFitness() >= pool.get(1).getFitness()):
-				"NonSpatialTournamentPop: tournament pool not sorted."; 
-		}
-		catch (InvalidFitnessException e) {}
 
 		randDouble = RANDGEN.nextDouble();
 		GPCreature winner = null;
@@ -127,7 +120,7 @@ public class SpatialTournamentPop extends GPPopulation {
 		/**Randomly select a winner*/
 		for (int i = 0; i < probDistro.length; i++) {
 			if (randDouble < probDistro[i]) {
-				winner = pool.get(i); 
+				winner = pool.get(NUM_NBRS - i - 1); 
 				break; 
 			}
 		}
@@ -136,9 +129,10 @@ public class SpatialTournamentPop extends GPPopulation {
 		
 		/**Randomly choose creature to mate with the winner, return offspring*/
 		GPCreature randomMate = null; 
+        final int winnerID = winner.getId(); 
 		do { //Don't allow winner to reproduce with itself
-			randomMate = pool.get(RANDGEN.nextInt(pool.size())); 
-		} while (randomMate.getId() == winner.getId()); 
+			randomMate = pool.get(RANDGEN.nextInt(NUM_NBRS)); 
+		} while (randomMate.getId() == winnerID); 
 
 		/**Randomly choose which 'base' creature to return*/
 		//Meh seems to get better results when we keep the winner.

@@ -18,6 +18,8 @@ public class SimplePlay {
             Move toPlay = (whoseTurn == COLOR.WHITE ? 
                     whitePlayer.makeMove(b) :
                     blackPlayer.makeMove(b)); 
+          //  System.out.println(whoseTurn + " played move " + toPlay); 
+          //  System.out.println(b); 
             b.performMove(toPlay); 
         }
 

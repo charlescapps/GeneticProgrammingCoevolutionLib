@@ -5,11 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 import capps.gp.gpcreatures.GPCreature;
-
 import capps.gp.gpglobal.GPConfig;
-
 import capps.gp.gppopulations.GPPopulation;
-
 import minichess.config.MinichessConfig;
 
 /**
@@ -40,6 +37,7 @@ public class EvolveMinichess {
 		myPop = GPConfig.getPopType().newInstance(); 
 
 		int numGens = GPConfig.getNumGens(); 
+        System.out.println("Total generations to compute: " + numGens); 
 
 		GPCreature curBest = null; 
     
@@ -55,15 +53,15 @@ public class EvolveMinichess {
 			myPop.evolveNextGeneration(); 
 			myPop.computeFitnesses(); 
 
-
 			System.out.println(); 
 		}
 
 		GPCreature best = myPop.getBestCreature(); 
 		System.out.println("Best creature height=" + best.getTree().getHeight()); 
+		System.out.println("Best fitness=" + best.getFitness()); 
 
 		/**Output best creature to dot file*/
-		String dot = best.getTree().toDot("Best function"); 
+		String dot = best.getTree().toDot("Best creature"); 
 		FileWriter fw = null; 
 		fw = new FileWriter(GPConfig.getOutputDir() + "/best.dot"); 
 		fw.write(dot); 

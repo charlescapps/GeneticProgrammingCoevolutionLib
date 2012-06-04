@@ -16,6 +16,8 @@ import minichess.ai.IterativeDeepeningAI;
 
 import minichess.boards.Board;
 
+import minichess.heuristic.HeuristicInterface;
+
 import minichess.play.*;
 import minichess.config.MinichessConfig;
 
@@ -67,8 +69,18 @@ public class PlayMinichessGP {
 			= MinichessConfig.getWhitePlayerClass(); 
 		whitePlayer = whitePlayerClass.newInstance(); 
 		whitePlayer.setColor(COLOR.WHITE); 
-		whitePlayer.setHeuristic(
-				MinichessConfig.getWhiteHeuristicClass().newInstance()); 
+
+        Class<? extends HeuristicInterface> wHeur = MinichessConfig.getWhiteHeuristicClass();
+
+        if (GPConfig.getWhiteStringToParse() != null && 
+                wHeur.equals(MinichessCreature.class)) {
+            whitePlayer.setHeuristic(new MinichessCreature(GPConfig.getWhiteStringToParse())); 
+
+        }
+        else {
+            whitePlayer.setHeuristic(wHeur.newInstance()); 
+        }
+
 		if (IterativeDeepeningAI.class.isInstance(whitePlayer)) {
 			IterativeDeepeningAI whiteID = (IterativeDeepeningAI) whitePlayer;
 			whiteID.setTimePerMove(MinichessConfig.getTimePerMove()); 
@@ -79,8 +91,20 @@ public class PlayMinichessGP {
 			= MinichessConfig.getBlackPlayerClass(); 
 		blackPlayer = blackPlayerClass.newInstance(); 
 		blackPlayer.setColor(COLOR.BLACK); 
-		blackPlayer.setHeuristic(
-				MinichessConfig.getBlackHeuristicClass().newInstance()); 
+
+        Class<? extends HeuristicInterface> bHeur = MinichessConfig.getBlackHeuristicClass();
+
+        if (GPConfig.getBlackStringToParse() != null && 
+                bHeur.equals(MinichessCreature.class)) {
+            System.out.println("Setting black heuristic to:"); 
+            System.out.println(GPConfig.getBlackStringToParse()); 
+            blackPlayer.setHeuristic(new MinichessCreature(GPConfig.getBlackStringToParse())); 
+
+        }
+        else {
+            blackPlayer.setHeuristic(bHeur.newInstance()); 
+        }
+
 		if (IterativeDeepeningAI.class.isInstance(blackPlayer)) {
 			IterativeDeepeningAI blackID = (IterativeDeepeningAI) blackPlayer;
 			blackID.setTimePerMove(MinichessConfig.getTimePerMove()); 

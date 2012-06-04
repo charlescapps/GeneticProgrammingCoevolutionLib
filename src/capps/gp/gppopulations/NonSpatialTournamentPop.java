@@ -91,7 +91,12 @@ public class NonSpatialTournamentPop extends GPPopulation {
 
         final int maxIndex = TOURNY_SIZE - 1;
 		for (int i = 0; i < maxIndex; i++) {
-			int randIndex = RANDGEN.nextInt(currentPop.size()); 
+            int randIndex = -1; 
+            do {
+                randIndex = RANDGEN.nextInt(currentPop.size()); 
+            }
+            while (randIndex == current.getId()); 
+
 			pool.add(currentPop.get(randIndex)); 
 		}
 

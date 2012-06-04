@@ -1,5 +1,8 @@
 package capps.gp.gppopulations; 
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,7 +21,7 @@ public abstract class GPPopulation {
 	protected final Random RANDGEN; 
 	protected final Class<? extends GPCreature> CREATURE_TYPE; 
 
-	protected int numGensSoFar=1; 
+	protected int numGensSoFar; 
 	protected long RUNNUM; 
 
 	public abstract List<? extends GPCreature> getNewestGeneration(); 
@@ -41,6 +44,7 @@ public abstract class GPPopulation {
 
 		this.RANDGEN = GPConfig.getRandGen(); 
 		this.RUNNUM=0; 
+        this.numGensSoFar = 0;
 
 		while (RUNNUM <=0)
 			this.RUNNUM = RANDGEN.nextLong(); 
@@ -72,6 +76,27 @@ public abstract class GPPopulation {
 		return shallowCopy.get(shallowCopy.size() - 1); 
 	}
 
+    public void writeBestCreature() {
+
+        GPCreature bestCreat = getBestCreature(); 
+        String file = GPConfig.getOutputDir() + "/bestgen" + getGenNum() + ".txt"; 
+        String dotfile = GPConfig.getOutputDir() + "/bestgen" + getGenNum() + ".dot"; 
+        System.out.println("Writing best creature to '" + file + "'"); 
+        try {
+            FileWriter fw = new FileWriter(file); 
+            fw.write(bestCreat.toString()); 
+            fw.close(); 
+            fw = new FileWriter(dotfile); 
+            fw.write(bestCreat.getTree().toDot("gen" + getGenNum())); 
+            fw.close(); 
+        }
+        catch (Exception e) {
+            GPConfig.writeToLog(e.getMessage()); 
+            e.printStackTrace(System.err); 
+        }
+
+    }
+
 	public void evolveNextGeneration() {
 		saveGenInfo(); 
 		List<? extends GPCreature> currentGen = getNewestGeneration(); 
@@ -95,6 +120,7 @@ public abstract class GPPopulation {
 		if (saveShortInfo) {
 			shortInfo.add(getShortInfoOneGen()); 
 		}
+        writeBestCreature(); 
 	}
 
 	public double getAvgFitnessCurrentGen() {
@@ -104,6 +130,9 @@ public abstract class GPPopulation {
 			for (GPCreature c: cs)
 				sum+=c.getFitness(); 
 		} catch (InvalidFitnessException e) {
+            GPConfig.writeToLog("GPPopulation, gen #" + numGensSoFar 
+                    + ", getAvgFitnessCurrentGen: "
+					+ "Attempt to get invalid fitness."); 
 			System.err.println("GPPopulation: getAvgFitnessCurrentGen: "
 					+ "Attempt to get invalid fitness."); 
 			return -1.0; 
@@ -122,6 +151,9 @@ public abstract class GPPopulation {
 				sumSquares+=diff*diff;
 			}
 		} catch (InvalidFitnessException e) {
+            GPConfig.writeToLog("GPPopulation: gen #" + numGensSoFar 
+                    + ", getStdDevFitnessCurrentGen: "
+					+ "Attempt to get invalid fitness.");
 			System.err.println("GPPopulation: getStdDevFitnessCurrentGen: "
 					+ "Attempt to get invalid fitness."); 
 			return -1.0; 
@@ -139,14 +171,16 @@ public abstract class GPPopulation {
 			return null; 
 		}
 		String header = "RUNNUM " + this.getRunNum() + "\n" + 
-					"POP_CLASS " + this.getClass().getName() + "\n" +
-					"CREAT_CLASS " + this.getCreatureType().getName() + "\n" +
-					"POPSIZE " + GPConfig.getPopSize() + "\n" + 
-					"NUM_GENS " + GPConfig.getNumGens() + "\n" +
-					"SEED " + GPConfig.getSeed() + "\n" +
-					"BEST_FITNESS " + String.format("%1$.3f",bestFitness) + "\n" +
-					"AVG_FITNESS " + String.format("%1$.3f",getAvgFitnessCurrentGen()) + "\n" +
-					"STD_DEV_FITNESS " + String.format("%1$.3f",getStdDevFitnessCurrentGen()) + "\n";
+					String.format("%1$-25s","POP_CLASS ") + this.getClass().getName() + "\n" +
+					String.format("%1$-25s","CREAT_CLASS ") + this.getCreatureType().getName() + "\n" +
+					String.format("%1$-25s","POPSIZE ") + GPConfig.getPopSize() + "\n" + 
+					String.format("%1$-25s","NUM_GENS ") + GPConfig.getNumGens() + "\n" +
+					String.format("%1$-25s","SEED ") + GPConfig.getSeed() + "\n" +
+					String.format("%1$-25s","BEST_FITNESS_FINAL ") + String.format("%1$.3f",bestFitness) + "\n" +
+					String.format("%1$-25s","AVG_FITNESS_FINAL ") + String.format("%1$.3f",getAvgFitnessCurrentGen()) + "\n" +
+					String.format("%1$-25s","STD_DEV_FINAL ") + String.format("%1$.3f",getStdDevFitnessCurrentGen()) + "\n" +
+					String.format("%1$-25s","BEST_TREE_HEIGHT ") + getBestCreature().getTree().getHeight() + "\n" +
+					String.format("%1$-25s","BEST_TREE_NODES ") + getBestCreature().getTree().totalNodes() + "\n";
 		return header;
 	}
 
@@ -154,14 +188,18 @@ public abstract class GPPopulation {
 		List<String> finalGenInfo = new ArrayList<String>(); 
 		String colHeader = String.format("%1$-12s", "ID") +
 						   String.format("%1$-12s", "FITNESS") +
-						   String.format("%1$-12s", "NUM_GENS"); 
+						   String.format("%1$-12s", "HEIGHT") + 
+						   String.format("%1$-12s", "NUM_NODES"); 
+                            
 		finalGenInfo.add(colHeader); 
 
 		List<? extends GPCreature> currentPop = getNewestGeneration(); 
 
 		for(GPCreature c: currentPop) {
 			String info = String.format("%1$-12d",c.getId()) 
-						+ String.format("%1$-12.4f",c.getFitness()); 
+						+ String.format("%1$-12.4f",c.getFitness()) 
+						+ String.format("%1$-12d",c.getTree().getHeight())
+						+ String.format("%1$-12d",c.getTree().totalNodes()); 
 			finalGenInfo.add(info); 
 		}
 		return finalGenInfo;
@@ -169,9 +207,10 @@ public abstract class GPPopulation {
 
 	protected String getShortInfoOneGen() {
 		double bestFitness = 0.0; 
+        GPCreature bestCreature = getBestCreature(); 
 
 		try { 
-			bestFitness = getBestCreature().getFitness(); 
+			bestFitness = bestCreature.getFitness(); 
 		} catch (InvalidFitnessException e) {
 			System.err.println("Must compute fitness before calling " +
 					"GPPopulation: getShortInfoOneGen()"); 
@@ -183,7 +222,9 @@ public abstract class GPPopulation {
 					String.format("%1$-12d",getPopSize()) + 
 					String.format("%1$-12.3f",bestFitness) +
 					String.format("%1$-12.3f",getAvgFitnessCurrentGen()) +
-					String.format("%1$-12.3f",getStdDevFitnessCurrentGen());
+					String.format("%1$-12.3f",getStdDevFitnessCurrentGen()) +
+					String.format("%1$-12d",bestCreature.getTree().getHeight())+
+					String.format("%1$-12d",bestCreature.getTree().totalNodes());
 		
 		return shortInfoGen; 
 	}
@@ -193,7 +234,9 @@ public abstract class GPPopulation {
 					String.format("%1$-12s","POP_SIZE") + 
 					String.format("%1$-12s","BEST_FIT") +
 					String.format("%1$-12s","AVG_FIT") +
-					String.format("%1$-12s","STD_DEV_FIT");
+					String.format("%1$-12s","STD_DEV_FIT") +
+					String.format("%1$-12s","BEST_HEIGHT") +
+					String.format("%1$-12s","BEST_NUM_NODES");
 		return shortInfoHeader; 
 	}
 

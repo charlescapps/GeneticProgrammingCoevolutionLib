@@ -1,8 +1,17 @@
 package capps.gp.gpglobal; 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import capps.gp.gpcreatures.GPCreature;
@@ -44,6 +53,12 @@ public class GPConfig {
 	private static final String _POP_CLASS = "POP_CLASS"; 
 	private static final String _CREATURE_CLASS = "CREATURE_CLASS"; 
 
+	private static final String _WHITE_TEXT_FILE = "WHITE_TEXT_FILE"; 
+	private static final String _BLACK_TEXT_FILE = "BLACK_TEXT_FILE"; 
+
+    private static String whiteStringToParse; 
+    private static String blackStringToParse; 
+
 	private static Long seed; //if NULL, use System.currentTimeMillis()
 	private static Double probCrossover;
 	private static Double probMutate;
@@ -67,6 +82,9 @@ public class GPConfig {
 
 	private static Class<? extends GPPopulation> popClass; 
 	private static Class<? extends GPCreature> creatureClass; 
+
+    private static File LOG_FILE; 
+    private static BufferedWriter LOGGER; 
 
 	/**Spits back out the config file. Questionable usefulness. */
 	public static String toConfigFormat() {
@@ -138,6 +156,15 @@ public class GPConfig {
 			//CASE "OUTPUT_DIR"
 			else if (tokens[0].equals(_OUTPUT_DIR)) {
 				GPConfig.outputDir = (tokens[1]); 
+                File outputDirFile = new File(outputDir); 
+                if (!outputDirFile.exists()) {
+                    System.out.println("Directory '" + outputDir + "does not exist.\n"
+                            + "Creating new directory."); 
+                    outputDirFile.mkdir();
+                }
+                GPConfig.LOG_FILE = new File(outputDir + "/LOG.txt"); 
+                LOG_FILE.createNewFile(); 
+                LOGGER = new BufferedWriter(new FileWriter(LOG_FILE)); 
 			}
 			//CASE "HEADER_FILE"
 			else if (tokens[0].equals(_HEADER_FILE)) {
@@ -175,6 +202,26 @@ public class GPConfig {
 			else if (tokens[0].equals(_CREATURE_CLASS)) {
 				GPConfig.creatureClass = (Class<? extends GPCreature>)Class.forName(tokens[1]); 
 			}
+            else if (tokens[0].equals(_WHITE_TEXT_FILE)) {
+                System.out.println("Loading minichess creature from file '" 
+                        + tokens[1] + "' for WHITE player"); 
+                BufferedReader br = new BufferedReader(new FileReader(tokens[1])); 
+                whiteStringToParse = new String(); 
+                String fileLine = null; 
+                while ((fileLine = br.readLine()) != null) 
+                    whiteStringToParse += fileLine;  
+                br.close(); 
+            }
+            else if (tokens[0].equals(_BLACK_TEXT_FILE)) {
+                System.out.println("Loading minichess creature from file '" 
+                        + tokens[1] + "' for BLACK player"); 
+                BufferedReader br = new BufferedReader(new FileReader(tokens[1])); 
+                blackStringToParse = new String(); 
+                String fileLine = null; 
+                while ((fileLine = br.readLine()) != null) 
+                    blackStringToParse += fileLine;  
+                br.close(); 
+            }
 		}
 
 		if (seed == null)
@@ -183,6 +230,21 @@ public class GPConfig {
 		randGen = new Random(seed); 
 
 	}
+
+    public static void writeToLog(String line) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String dateStr = df.format(date);
+        try {
+            LOGGER.write(dateStr + "> " + line + "\n"); 
+            LOGGER.flush();
+        }
+        catch (IOException e) {
+            System.err.println("Failed to write to log file. You're fucked."); 
+            e.printStackTrace(System.err); 
+        }
+    }
+
 
 	public static Long getSeed() {
 		return seed;
@@ -263,4 +325,12 @@ public class GPConfig {
 	public static Class<? extends GPPopulation> getPopType() {
 		return popClass;
 	}
+
+    public static String getWhiteStringToParse() {
+        return whiteStringToParse; 
+    }
+
+    public static String getBlackStringToParse() {
+        return blackStringToParse; 
+    }
 }

@@ -15,25 +15,25 @@ import minichess.boards.Board;
  *
  * The config parameter TOURNY_SIZE determines how many games are played. */
 
-public class MinichessBeatRandCreature 
+public class MinichessBeatAB 
     extends MinichessCreature {
 
-    protected final static AiInterface globalRandomAi = new RandomAi(); 
+    protected final static AiInterface globalAbAi = new AbNegaMaxID(); 
 
-    /** Constructs a new MinichessBeatRandCreature. 
+    /** Constructs a new MinichessBeatAB. 
      *  Adds terminal nodes that are specific to Minichess. 
      */
-    public MinichessBeatRandCreature() {
+    public MinichessBeatAB() {
         super(); 
     }
 
-    public MinichessBeatRandCreature( MinichessBeatRandCreature c1) {
+    public MinichessBeatAB( MinichessBeatAB c1) {
         super(c1); 
     }
 
 	@Override
 	public Object clone() {
-		return new MinichessBeatRandCreature(this); 
+		return new MinichessBeatAB(this); 
 	}
 
 	@Override
@@ -41,30 +41,24 @@ public class MinichessBeatRandCreature
 
         this.fitness = 0.0; 
 
-        AiInterface opponent = MinichessBeatRandCreature.globalRandomAi; 
-        boolean playAsWhite = GPConfig.getRandGen().nextBoolean(); 
-        int numOpponents = GPConfig.getTournySize() - 1; 
+        AiInterface opponent = MinichessBeatAB.globalAbAi; 
 
-        for (int i = 0; i < numOpponents; i++) {
+        //First play as white
+        COLOR winner; 
+        winner = SimplePlay.playGame(this.myMinichessAi, opponent); 
+        if (winner == null) ;
+        else if (winner == COLOR.WHITE)
+            fitness += 1.0; 
+        else 
+            fitness -= 1.0; 
 
-            COLOR winner = null;
-            if (playAsWhite) {
-                winner = SimplePlay.playGame(this.myMinichessAi, opponent); 
-            }
-            else {
-                winner = SimplePlay.playGame(opponent, this.myMinichessAi); 
-            }
+        winner = SimplePlay.playGame(opponent, this.myMinichessAi); 
 
-            if (winner == null)
-                continue;
-            else if (playAsWhite && winner==COLOR.WHITE)
-                fitness+=1.0; 
-            else if (!playAsWhite && winner == COLOR.BLACK)
-                fitness+=1.0; 
-            else
-                fitness-=1.0; 
-
-        }
+        if (winner == null) ;
+        else if (winner == COLOR.WHITE)
+            fitness -= 1.0; 
+        else 
+            fitness += 1.0; 
 
         this.p_isFitnessValid = true; 
     }

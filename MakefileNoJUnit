@@ -22,8 +22,6 @@ MINICHESS_SRC = impl/minichess/*.java \
 				impl/minichess/heuristic/*.java \
 				impl/minichess/executables/*.java
 
-TEST_SRC = test/capps/gp/gptrees/*.java
-
 general_evolver.jar: gp_classes
 	jar vcfe general_evolver.jar capps.gp.gpdrivers.GeneralEvolver -C bin \
 		capps
@@ -33,18 +31,18 @@ evolve_minichess.jar: gp_classes minichess_classes
 		capps -C bin minichess
 
 funcs_evolver.jar: gp_classes
-	jar vcfe funcs_evolved.jar capps.gp.gpdrivers.EvolveFuncApproxMain -C bin \
+	jar vcfe funcs_evolver.jar capps.gp.gpdrivers.EvolveFuncApproxMain -C bin \
 		capps
 
 play_minichess_gp.jar: minichess_classes gp_classes
 	jar vcfe play_minichess_gp.jar minichess.executables.PlayMinichessGP \
 	-C bin minichess -C bin capps
 
-gp_classes: $(GP_SRC) $(TEST_SRC)
-	javac -g -sourcepath src:test:impl -d ./bin $(GP_SRC) $(TEST_SRC)
+gp_classes: $(GP_SRC)
+	javac -g -sourcepath src:impl -d ./bin $(GP_SRC)
 	
 minichess_classes: $(MINICHESS_SRC)
-	javac -g -sourcepath src:test:impl -d ./bin $(MINICHESS_SRC)
+	javac -g -sourcepath src:impl -d ./bin $(MINICHESS_SRC)
 
 clean: 
 	rm -f -r bin/*

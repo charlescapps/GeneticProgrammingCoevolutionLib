@@ -9,6 +9,10 @@ public class ERCNode extends GPTerminal implements Cloneable{
 		value = GPConfig.getRandGen().nextDouble()*4.0 - 2.0;
     }
 
+    public ERCNode(double val) {
+        this.value = val; 
+    }
+
 	@Override
     public double interpretForResult(GameState state) {
         return value; 
@@ -16,7 +20,7 @@ public class ERCNode extends GPTerminal implements Cloneable{
 
 	@Override
     public String label() {
-        return "ERC=" + String.format("%1$,.3f",value); 
+        return "ERC=" + value; //String.format("%1$,.3f",value); 
     }
 
 	@Override

@@ -1,0 +1,2 @@
+BLACK_TEXT_FILE bestgen14.txt
+WHITE_TEXT_FILE bestgen14.txt

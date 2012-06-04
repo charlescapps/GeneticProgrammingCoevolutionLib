@@ -9,6 +9,7 @@ import minichess.*;
 import minichess.ai.threads.ExitThreadException;
 import minichess.boards.Board; 
 import minichess.ai.threads.IterativeDeepeningThread;
+import minichess.config.*; 
 
 import minichess.heuristic.HeuristicInterface;
 
@@ -23,9 +24,9 @@ public abstract class IterativeDeepeningAI implements AiInterface {
 	protected HeuristicInterface myHeuristic;
 	
 	public IterativeDeepeningAI() {
-		this.minDepth = 2; 
+		this.minDepth = MinichessConfig.getIterativeDeepMinDepth(); 
 		this.idThread = null;
-		this.timePerMove = 1000; 
+		this.timePerMove = MinichessConfig.getTimePerMove(); 
 	}
 
 	public IterativeDeepeningAI(long timePerMoveMillis, int minDepth) {
@@ -64,15 +65,19 @@ public abstract class IterativeDeepeningAI implements AiInterface {
 		idThread = new IterativeDeepeningThread(this, b, minDepth);
 		idThread.start(); 
 
-		try {
-			Thread.sleep(timePerMove);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			System.exit(1); 
-		} 
 		
-		Move toPlay = idThread.getMove(); 
-		depthReturned = idThread.getDepth(); 
+		Move toPlay = null; 
+
+        while (toPlay == null) {
+            try {
+                Thread.sleep(timePerMove);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.exit(1); 
+            } 
+            toPlay = idThread.getMove(); 
+            
+        }
 		idThread.setStopFlag();
 		
 		return toPlay;

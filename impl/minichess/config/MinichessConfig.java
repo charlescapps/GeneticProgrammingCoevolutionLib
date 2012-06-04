@@ -1,6 +1,7 @@
 package minichess.config; 
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 
 import minichess.ai.AiInterface; 
@@ -31,6 +32,7 @@ public class MinichessConfig {
 	private static int iterativeDeepMinDepth; 
 
 	private static boolean reverseDisplay = false; 
+
 
 	public static void loadConfig(BufferedReader configFile)
 		throws IOException, ClassNotFoundException {
@@ -121,4 +123,5 @@ public class MinichessConfig {
 		return sb.toString(); 
 
 	}
+
 }
