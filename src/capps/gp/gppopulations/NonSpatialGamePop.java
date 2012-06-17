@@ -97,9 +97,10 @@ public class NonSpatialGamePop extends GPPopulation {
 			}
 			/**Play games against each opponent to compute fitness.*/
 			c.setOpponents(pool); 
+            System.out.println("NonSpatialGamePop: Computing fitness of creature "
+                    + c.getId()); 
 			c.computeFitness(); 
 		}
-
 	}
 
 	@Override

@@ -106,6 +106,8 @@ public class SpatialGamePop extends GPPopulation {
                 }
                 /**Play games against each adjacent creature to compute fitness.*/
                 gridPop[r][c].setOpponents(pool); 
+                System.out.println("SpatialGamePop: Computing fitness of creature (" 
+                        + r + ", " + c + ")"); 
                 gridPop[r][c].computeFitness(); 
             }
         }

@@ -1,8 +1,18 @@
 TODO: 
 (updated 6-4-2012)
 
+Write up results before next Sunday
+
 Experiment ideas:
 =====================================
+
+-Choose random time per move. 
+-Save all creatures every generation
+-Write a program to resume
+-random value heuristic
+-compare this to alpha-beta
+
+-Pick a random time at each generation.
 
 -Data output
 	X Header from static GPConfig class (because it's global data)
@@ -34,13 +44,17 @@ _  Minichess Sensors. Look at notes.
     X rooks with open file
     _ more ideas...
 
-X  Make MinichessBeatRand class. Fitness is how many games it wins out of
-    TOURNY_SIZE - 1 games against a random move opponent.
-X  Make MinichessBeatAlphaBeta class. Fitness is just how many games it wins against
-        AlphaBetaNegaMax with basic piece cost heuristic
+_  Creature classes
+    X  Make MinichessBeatRand class. Fitness is how many games it wins out of
+        TOURNY_SIZE - 1 games against a random move opponent.
+    X  Make MinichessBeatAlphaBeta class. Fitness is just how many games it wins against
+            AlphaBetaNegaMax with basic piece cost heuristic
+    X  MinichessBeatABMultiTime class. Fitness is games won / lost / drawn at
+        different times. Chose 50ms, 100ms, 200ms, 400ms, 800ms
 
 o  Actually kinda silly to play more than 2 games (WHITE and BLACK) since it's
 pretty much deterministic for the same time per move. 
+    --this is why using many times is useful
 
 o  Could modify these to compute fitness by playing games at several different
 times! Would be interesting! Actually I think I'll do this!!!
@@ -82,7 +96,7 @@ o At least easy to do this with clone(), by returning the same, immutable
 
 -Run on other machines
 	- steens (ubuntu) - running config to beat AlphaBeta
-	- sisters (ubuntu) - to run spatial game
+	- sisters (ubuntu) - running spatial game
 	- kamet (ubuntu) - running nonspatial game
 	sangre (mac)
 	fuji (mac)

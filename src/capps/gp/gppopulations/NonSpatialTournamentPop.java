@@ -74,6 +74,8 @@ public class NonSpatialTournamentPop extends GPPopulation {
 	@Override
 	public void computeFitnesses() {
 		for (GPCreature c: currentPop) {
+            System.out.println("NonSpatialTournamentPop: Computing fitness of "
+                    + "Creature " + c.getId()); 
 			c.computeFitness(); 
 		}
 	}

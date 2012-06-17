@@ -42,19 +42,24 @@ public class EvolveMinichess {
 		GPCreature curBest = null; 
     
         System.out.println("Computing fitness of first generation..."); 
-		myPop.computeFitnesses(); 
+        
 		for (int i = 0; i < numGens; i++) {
 
+            myPop.computeFitnesses(); 
 			curBest = myPop.getBestCreature(); 
 
 			System.out.println("GENERATION NUMBER: " + i); 
 			System.out.println("BEST FITNESS     : " 
-					+ String.format("%1$,.4f",curBest.getFitness())); 
-			myPop.evolveNextGeneration(); 
-			myPop.computeFitnesses(); 
+					+ String.format("%1$,.3f",curBest.getFitness())); 
+            System.out.println(); 
 
-			System.out.println(); 
+			myPop.evolveNextGeneration(); 
 		}
+
+        //Compute last generation's fitness
+        myPop.computeFitnesses(); 
+        //Save the last gen's info
+        myPop.saveGenInfo(); 
 
 		GPCreature best = myPop.getBestCreature(); 
 		System.out.println("Best creature height=" + best.getTree().getHeight()); 

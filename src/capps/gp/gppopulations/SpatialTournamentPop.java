@@ -79,8 +79,11 @@ public class SpatialTournamentPop extends GPPopulation {
 	@Override
 	public void computeFitnesses() {
 		for (GPCreature[] cs: gridPop) 
-			for (GPCreature c: cs)
+			for (GPCreature c: cs) {
+                System.out.println("SpatialTournamentPop: Computing fitness of "
+                        + "Creature " + c.getId()); 
 				c.computeFitness(); 
+            }
 	}
 
 	@Override 

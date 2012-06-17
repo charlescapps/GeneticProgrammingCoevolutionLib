@@ -116,7 +116,7 @@ public abstract class GPPopulation {
 		++numGensSoFar; 
 	}
 
-	protected void saveGenInfo() {
+	public void saveGenInfo() {
 		if (saveShortInfo) {
 			shortInfo.add(getShortInfoOneGen()); 
 		}
@@ -173,7 +173,7 @@ public abstract class GPPopulation {
 		String header = "RUNNUM " + this.getRunNum() + "\n" + 
 					String.format("%1$-25s","POP_CLASS ") + this.getClass().getName() + "\n" +
 					String.format("%1$-25s","CREAT_CLASS ") + this.getCreatureType().getName() + "\n" +
-					String.format("%1$-25s","POPSIZE ") + GPConfig.getPopSize() + "\n" + 
+					String.format("%1$-25s","POPSIZE ") + getPopSize() + "\n" + 
 					String.format("%1$-25s","NUM_GENS ") + GPConfig.getNumGens() + "\n" +
 					String.format("%1$-25s","SEED ") + GPConfig.getSeed() + "\n" +
 					String.format("%1$-25s","BEST_FITNESS_FINAL ") + String.format("%1$.3f",bestFitness) + "\n" +

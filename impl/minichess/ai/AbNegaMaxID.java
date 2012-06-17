@@ -16,6 +16,7 @@ public class AbNegaMaxID extends IterativeDeepeningAI {
 
 	public AbNegaMaxID(long panicTimeMillis, int minDepth) {
 		super(panicTimeMillis, minDepth);
+        this.setHeuristic(new minichess.heuristic.PointHeuristic()); 
 	}
 
 	//Not the recursive method; this is the top-level call 
